@@ -1,58 +1,67 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import ErrorBoundary from './ErrorBoundary';
+import NotFound from './NotFound';
+import HomeScreen from '../screens/HomeScreen';
+import CockpitScreen from '../screens/CockpitScreen';
+import DossierScreen from '../screens/DossierScreen';
+import './App.css';
 
-interface HealthStatus {
-  status: string
-  replay_only: boolean
-}
-
-export function App() {
-  const [health, setHealth] = useState<HealthStatus | null>(null)
+export default function App() {
+  const [route, setRoute] = useState(window.location.hash || '#/');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    fetch('/api/health')
-      .then(r => r.json())
-      .then(setHealth)
-      .catch(() => setHealth(null))
-  }, [])
+    const handleHashChange = () => setRoute(window.location.hash || '#/');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        setTheme(savedTheme);
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    try {
+      localStorage.setItem('theme', newTheme);
+    } catch (e) {
+      // Ignore
+    }
+  };
+
+  let content;
+  if (route === '#/') {
+    content = <HomeScreen />;
+  } else if (route.startsWith('#/run/')) {
+    const id = route.split('/')[2];
+    content = <CockpitScreen runId={id} />;
+  } else if (route.startsWith('#/dossier/')) {
+    const id = route.split('/')[2];
+    content = <DossierScreen runId={id} />;
+  } else {
+    content = <NotFound />;
+  }
 
   return (
-    <div className="app">
-      <header className="header">
-        <div className="header__mark">
-          <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 2 C10 2 10 4 12 4 L12 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <line x1="12" y1="4" x2="12" y2="26" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M12 26 L8 30 L12 32 L16 30 Z" fill="currentColor" />
-          </svg>
-          <span className="header__wordmark">Plumbline</span>
-        </div>
-        <div className="header__status">
-          {health ? (
-            <span className={`status-dot status-dot--${health.status === 'ok' ? 'live' : 'replay'}`} />
-          ) : null}
-          <span>{health?.replay_only ? 'Replay only' : health ? 'Live' : 'Connecting…'}</span>
-        </div>
-      </header>
-
-      <main className="main">
-        <section className="hero">
-          <h1>Refactor old code without changing what it does.</h1>
-          <p>
-            Plumbline records how your code behaves today, plants bugs in it to
-            check that record, then tests every refactor against it and shows the evidence.
-          </p>
-        </section>
-
-        <section className="start-panel">
-          <p className="start-panel__placeholder">
-            Start panel will be built in Phase 3.
-          </p>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <p>Built with NVIDIA Nemotron on Nebius Token Factory. Open source under MIT.</p>
-      </footer>
-    </div>
-  )
+    <ErrorBoundary>
+      <div className={`app-container theme-${theme}`}>
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <button onClick={toggleTheme} className="theme-toggle">
+          Toggle Theme
+        </button>
+        <main id="main-content">
+          {content}
+        </main>
+      </div>
+    </ErrorBoundary>
+  );
 }

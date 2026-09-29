@@ -1,0 +1,23 @@
+.diff-viewer {
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-header {
+  padding: 8px 16px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.diff-content {
+  padding: 16px;
+  font-family: var(--font-code);
+  font-size: 13px;
+  background: var(--bg-default);
+  overflow-x: auto;
+}

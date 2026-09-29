@@ -16,9 +16,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def run(cmd: list[str], label: str) -> bool:
     """Run a command, print its label, and return True on success."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  {label}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     result = subprocess.run(cmd, cwd=str(ROOT))
     ok = result.returncode == 0
     print(f"  {'PASS' if ok else 'FAIL'}: {label}")
@@ -35,7 +35,9 @@ def main() -> None:
 
     # Python lint and format check
     results.append(("ruff check", run(["uv", "run", "ruff", "check", "."], "Ruff lint")))
-    results.append(("ruff format", run(["uv", "run", "ruff", "format", "--check", "."], "Ruff format check")))
+    results.append(
+        ("ruff format", run(["uv", "run", "ruff", "format", "--check", "."], "Ruff format check"))
+    )
 
     # Type check
     results.append(("pyright", run(["uv", "run", "pyright", "backend/"], "Pyright type check")))
@@ -50,22 +52,47 @@ def main() -> None:
     if not fast:
         frontend_dir = ROOT / "frontend"
         if (frontend_dir / "package.json").exists():
-            results.append(("npm typecheck", run(["npm", "run", "typecheck", "--prefix", "frontend"], "Frontend typecheck")))
-            results.append(("npm lint", run(["npm", "run", "lint", "--prefix", "frontend"], "Frontend lint")))
-            results.append(("npm test", run(["npm", "run", "test", "--", "--run", "--prefix", "frontend"], "Frontend unit tests")))
-            results.append(("npm build", run(["npm", "run", "build", "--prefix", "frontend"], "Frontend build")))
+            results.append(
+                (
+                    "npm typecheck",
+                    run(["npm", "run", "typecheck", "--prefix", "frontend"], "Frontend typecheck"),
+                )
+            )
+            results.append(
+                ("npm lint", run(["npm", "run", "lint", "--prefix", "frontend"], "Frontend lint"))
+            )
+            results.append(
+                (
+                    "npm test",
+                    run(
+                        ["npm", "run", "test", "--", "--run", "--prefix", "frontend"],
+                        "Frontend unit tests",
+                    ),
+                )
+            )
+            results.append(
+                (
+                    "npm build",
+                    run(["npm", "run", "build", "--prefix", "frontend"], "Frontend build"),
+                )
+            )
 
     # E2E
     if e2e:
-        results.append(("playwright", run(["npx", "playwright", "test", "--project=chromium"], "Playwright e2e")))
+        results.append(
+            (
+                "playwright",
+                run(["npx", "playwright", "test", "--project=chromium"], "Playwright e2e"),
+            )
+        )
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("  SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     all_pass = True
     for label, ok in results:
-        icon = "✓" if ok else "✗"
+        icon = "[OK]" if ok else "[XX]"
         print(f"  {icon} {label}")
         if not ok:
             all_pass = False

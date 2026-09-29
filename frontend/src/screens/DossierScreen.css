@@ -1,0 +1,38 @@
+.dossier-screen {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.dossier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.dossier-header h1 {
+  font-size: 32px;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+.dossier-section {
+  margin-bottom: 48px;
+}
+
+.dossier-section h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+@media print {
+  .actions { display: none; }
+  .dossier-screen { padding: 0; }
+}

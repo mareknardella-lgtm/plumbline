@@ -1,56 +1,89 @@
-"""Plumbline FastAPI application."""
+"""Main FastAPI application."""
 
 from contextlib import asynccontextmanager
-from collections.abc import AsyncGenerator
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from backend.app.api.events_sse import router as events_router
+from backend.app.api.health import router as health_router
+from backend.app.api.replays import router as replays_router
+from backend.app.api.runs import router as runs_router
+from backend.app.api.specimens import router as specimens_router
+from backend.app.budget.guard import BudgetGuard
+from backend.app.events.bus import EventBus
+from backend.app.llm.client import LLMClient
+from backend.app.llm.registry import registry
+from backend.app.replay.engine import ReplayEngine
+from backend.app.sandbox.adapter import SandboxAdapter
+from backend.app.sandbox.fake import FakeSandbox
 from backend.app.settings import get_settings
+from backend.app.store.db import init_db
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Application lifespan: startup and shutdown."""
+async def lifespan(app: FastAPI):
     settings = get_settings()
-    # TODO: Initialize services (LLM client, sandbox client, store)
+
+    # Initialize DB
+    await init_db()
+
+    # Initialize components
+    app.state.event_bus = EventBus()
+
+    if settings.is_replay_only:
+        app.state.sandbox = FakeSandbox()
+        app.state.llm_client = None
+    else:
+        app.state.sandbox = SandboxAdapter()
+        app.state.llm_client = LLMClient(
+            base_url=settings.token_factory_base_url, api_key=settings.nebius_api_key
+        )
+        # Discover models
+        await registry.discover(app.state.llm_client.client)
+
+    app.state.budget_guard = BudgetGuard()
+    app.state.replay_engine = ReplayEngine()
+
     yield
-    # TODO: Graceful shutdown (cancel active runs, close connections)
+
+    # Graceful shutdown (e.g. close clients)
+    if hasattr(app.state, "llm_client") and app.state.llm_client:
+        await app.state.llm_client.client.close()
 
 
-def create_app() -> FastAPI:
-    """Create and configure the FastAPI application."""
-    settings = get_settings()
+app = FastAPI(title="Plumbline", lifespan=lifespan)
 
-    app = FastAPI(
-        title="Plumbline",
-        description="Refactor old code without changing what it does, and see the evidence.",
-        version="0.1.0",
-        lifespan=lifespan,
-    )
+settings = get_settings()
 
-    # CORS
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.allowed_origins_list,
-        allow_credentials=False,
-        allow_methods=["GET", "POST"],
-        allow_headers=["*"],
-    )
-
-    # API routes
-    from backend.app.api.health import router as health_router
-    from backend.app.api.runs import router as runs_router
-    from backend.app.api.specimens import router as specimens_router
-    from backend.app.api.replays import router as replays_router
-
-    app.include_router(health_router, prefix="/api")
-    app.include_router(runs_router, prefix="/api")
-    app.include_router(specimens_router, prefix="/api")
-    app.include_router(replays_router, prefix="/api")
-
-    return app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_origins_list,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-app = create_app()
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Content-Security-Policy"] = "default-src 'self'"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    return response
+
+
+# API routes
+app.include_router(health_router, prefix="/api/health", tags=["health"])
+app.include_router(runs_router, prefix="/api/runs", tags=["runs"])
+app.include_router(events_router, prefix="/api/runs", tags=["events"])  # /api/runs/{run_id}/events
+app.include_router(replays_router, prefix="/api/replays", tags=["replays"])
+app.include_router(specimens_router, prefix="/api/specimens", tags=["specimens"])
+
+# Serve frontend static files if they exist
+frontend_dist = Path(__file__).parent.parent.parent.parent / "frontend" / "dist"
+if frontend_dist.exists() and frontend_dist.is_dir():
+    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")

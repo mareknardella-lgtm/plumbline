@@ -7,8 +7,9 @@ from backend.app.main import app
 
 
 @pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
+def client():
+    with TestClient(app) as c:
+        yield c
 
 
 def test_health_returns_ok(client: TestClient) -> None:

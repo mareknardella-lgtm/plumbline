@@ -1,0 +1,35 @@
+.code-block-wrapper {
+  position: relative;
+  background: var(--bg-surface, #1e1e1e);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-default, #333);
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ccc;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.code-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.code-block {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: var(--font-code, monospace);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #d4d4d4;
+}

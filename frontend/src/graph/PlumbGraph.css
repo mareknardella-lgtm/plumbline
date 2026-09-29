@@ -1,0 +1,50 @@
+.plumb-graph-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.plumb-baseline {
+  stroke: var(--plumb, #0066cc);
+  stroke-width: 1.5px;
+  stroke-dasharray: 4 4;
+}
+
+.plumb-anchor {
+  fill: var(--plumb, #0066cc);
+}
+
+.plumb-checkpoint {
+  fill: var(--bg-surface);
+  stroke: var(--plumb, #0066cc);
+  stroke-width: 2px;
+}
+
+.plumb-candidate {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.plumb-candidate:hover {
+  opacity: 0.8;
+}
+
+.plumb-cable {
+  stroke: var(--text-muted);
+  stroke-width: 2px;
+}
+
+.plumb-bob {
+  fill: var(--bg-surface);
+  stroke: var(--text-default);
+  stroke-width: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plumb-candidate {
+    transition: none;
+  }
+}

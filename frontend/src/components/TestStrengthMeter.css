@@ -1,0 +1,36 @@
+.test-meter {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.test-meter-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-default);
+  z-index: 1;
+}
+
+.test-meter-ticks {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.test-tick {
+  width: 8px;
+  height: 12px;
+  background: var(--bg-surface);
+  border: 2px solid;
+}
+
+.tick-caught { border-color: #22c55e; background: #22c55e; }
+.tick-survived { border-color: #ef4444; }
+.tick-timeout { border-color: #eab308; background: repeating-linear-gradient(45deg, #eab308, #eab308 2px, transparent 2px, transparent 4px); }

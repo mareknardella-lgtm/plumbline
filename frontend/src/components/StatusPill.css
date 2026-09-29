@@ -1,0 +1,27 @@
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.status-dot-live { background: #22c55e; }
+.status-dot-replay { background: #eab308; }
+
+.status-spinner {
+  animation: spin 1s linear infinite;
+}
+
+.status-completed { color: #22c55e; border-color: #22c55e; background: #f0fdf4; }
+.status-failed { color: #ef4444; border-color: #ef4444; background: #fef2f2; }

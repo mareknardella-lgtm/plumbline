@@ -1,0 +1,75 @@
+.cockpit-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.cockpit-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.cockpit-title {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.cockpit-actions {
+  margin-left: auto;
+}
+
+.cockpit-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.cockpit-rail {
+  width: 250px;
+  border-right: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  overflow-y: auto;
+}
+
+.cockpit-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-default);
+  overflow: auto;
+  padding: 24px;
+}
+
+.cockpit-panel {
+  width: 350px;
+  border-left: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.cockpit-panel h3 {
+  padding: 16px;
+  margin: 0;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.logs-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  font-family: var(--font-code);
+  font-size: 12px;
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.log-line {
+  margin-bottom: 4px;
+}

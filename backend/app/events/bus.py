@@ -2,6 +2,7 @@
 
 import asyncio
 from collections.abc import AsyncGenerator
+from typing import Any
 
 from backend.app.events.models import EventEnvelope
 from backend.app.store.db import get_events, insert_event
@@ -15,13 +16,14 @@ class EventBus:
         self._seqs: dict[str, int] = {}
         self._lock = asyncio.Lock()
 
-    async def emit(self, run_id: str, event_type: str, data: dict) -> None:
+    async def emit(self, run_id: str, event_type: str, data: Any) -> None:
         """Emit an event, store it, and broadcast."""
         async with self._lock:
             seq = self._seqs.get(run_id, 0) + 1
             self._seqs[run_id] = seq
 
-        env = EventEnvelope(run_id=run_id, seq=seq, type=event_type, data=data)
+        payload = data.model_dump(mode="json") if hasattr(data, "model_dump") else data
+        env = EventEnvelope(run_id=run_id, seq=seq, type=event_type, data=payload)
 
         # Store in DB
         await insert_event(env)

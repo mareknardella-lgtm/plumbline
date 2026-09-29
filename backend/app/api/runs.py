@@ -1,13 +1,19 @@
 """Runs API."""
 
+import asyncio
+import logging
 import uuid
 from datetime import UTC, datetime
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+from backend.app.orchestrator.pipeline import PipelineOrchestrator
 from backend.app.store.db import create_run, get_artifacts, get_run, list_runs, update_run_status
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -30,6 +36,20 @@ async def create_new_run(req: CreateRunRequest, request: Request):
     run_id = str(uuid.uuid4())
     created_at = datetime.now(UTC).isoformat()
 
+    source_code = req.code or ""
+    if req.source == "specimen" and req.specimen_name:
+        specimen_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "specimens"
+            / req.specimen_name
+            / "src"
+            / f"{req.specimen_name}.py"
+        )
+        if specimen_file.exists():
+            source_code = specimen_file.read_text(encoding="utf-8")
+        else:
+            logger.warning(f"Specimen file not found: {specimen_file}")
+
     await create_run(
         run_id=run_id,
         created_at=created_at,
@@ -41,7 +61,22 @@ async def create_new_run(req: CreateRunRequest, request: Request):
         client_hash=client_hash,
     )
 
-    # Normally we'd start the orchestrator task here
+    # Launch orchestrator pipeline in background
+    orchestrator = PipelineOrchestrator(
+        event_bus=app.state.event_bus,
+        llm_client=getattr(app.state, "llm_client", None),
+        sandbox=getattr(app.state, "sandbox", None),
+        budget_guard=getattr(app.state, "budget_guard", None),
+    )
+
+    asyncio.create_task(
+        orchestrator.run(
+            run_id=run_id,
+            source_code=source_code,
+            goal=req.goal or "Modernize and preserve behavior",
+            mode=req.mode,
+        )
+    )
 
     return {"id": run_id}
 
@@ -70,6 +105,8 @@ async def download_artifact(run_id: str, name: str):
     artifacts = await get_artifacts(run_id)
     for art in artifacts:
         if art["name"] == name:
-            # return file using FileResponse in a real implementation
+            p = Path(art["path"])
+            if p.exists():
+                return FileResponse(p, filename=name)
             return {"url": art["path"]}
     raise HTTPException(status_code=404, detail="Artifact not found")

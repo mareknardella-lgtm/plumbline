@@ -12,8 +12,8 @@ export default function TestStrengthMeter({ caught, survived, timeout }: TestStr
   if (total === 0) return null;
 
   const getTicks = () => {
-    let ticks = [];
-    for(let i=0; i<caught; i++) ticks.push('caught');
+    const ticks: string[] = [];
+    for (let i = 0; i < caught; i++) ticks.push('caught');
     for(let i=0; i<survived; i++) ticks.push('survived');
     for(let i=0; i<timeout; i++) ticks.push('timeout');
     return ticks;

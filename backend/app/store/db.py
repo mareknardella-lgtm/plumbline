@@ -120,7 +120,7 @@ async def get_events(run_id: str, after_seq: int = 0) -> list[EventEnvelope]:
             ]
 
 
-async def save_artifact(run_id: str, name: str, path: str, sha256: str) -> None:
+async def save_artifact(run_id: str, name: str, path: str, sha256: str = "") -> None:
     async with aiosqlite.connect(_db_path()) as db:
         await db.execute(
             "INSERT INTO artifacts (run_id, name, path, sha256) VALUES (?, ?, ?, ?)",

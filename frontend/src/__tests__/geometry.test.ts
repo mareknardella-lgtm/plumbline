@@ -1,4 +1,5 @@
-import { computeGraphLayout } from '../geometry';
+import { describe, it, expect } from 'vitest';
+import { computeGraphLayout } from '../graph/geometry';
 
 describe('geometry', () => {
   it('should compute basic layout without candidates', () => {

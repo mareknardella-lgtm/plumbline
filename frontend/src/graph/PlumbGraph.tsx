@@ -31,6 +31,7 @@ export default function PlumbGraph({ state, width = 600, height = 400, onCandida
         {layout.candidates.map((c) => {
           const start = c.points[0];
           const end = c.points[1];
+          if (!start || !end) return null;
           return (
             <g key={c.id} className="plumb-candidate" onClick={() => onCandidateSelect?.(c.id)}>
               <line x1={start.x} y1={start.y} x2={end.x} y2={end.y} className="plumb-cable" />

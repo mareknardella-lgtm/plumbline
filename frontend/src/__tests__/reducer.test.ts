@@ -1,5 +1,5 @@
-import React from 'react';
-import { reduceEvent, initialState } from '../reducer';
+import { describe, it, expect } from 'vitest';
+import { reduceEvent, initialState } from '../lib/reducer';
 
 describe('reducer', () => {
   it('should handle RunStarted', () => {

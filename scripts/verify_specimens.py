@@ -39,18 +39,14 @@ def verify_log_digester():
 def verify_schedule_builder():
     print("Verifying schedule_builder trap...")
 
-    def orig_add_recurrence(event, days=None):
-        if days is None:
-            days = []
-        if not days:
-            days.append("Monday")
+    def orig_add_recurrence(event, days=[]):  # noqa: B006
+        days.append("Monday")
         return days
 
     def refact_add_recurrence(event, days=None):
         if days is None:
             days = []
-        if not days:
-            days.append("Monday")
+        days.append("Monday")
         return days
 
     orig_add_recurrence({})

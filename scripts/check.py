@@ -19,7 +19,7 @@ def run(cmd: list[str], label: str) -> bool:
     print(f"\n{'=' * 60}")
     print(f"  {label}")
     print(f"{'=' * 60}")
-    result = subprocess.run(cmd, cwd=str(ROOT))
+    result = subprocess.run(cmd, cwd=str(ROOT), shell=(sys.platform == "win32"))
     ok = result.returncode == 0
     print(f"  {'PASS' if ok else 'FAIL'}: {label}")
     return ok
@@ -55,17 +55,17 @@ def main() -> None:
             results.append(
                 (
                     "npm typecheck",
-                    run(["npm", "run", "typecheck", "--prefix", "frontend"], "Frontend typecheck"),
+                    run(["npm", "--prefix", "frontend", "run", "typecheck"], "Frontend typecheck"),
                 )
             )
             results.append(
-                ("npm lint", run(["npm", "run", "lint", "--prefix", "frontend"], "Frontend lint"))
+                ("npm lint", run(["npm", "--prefix", "frontend", "run", "lint"], "Frontend lint"))
             )
             results.append(
                 (
                     "npm test",
                     run(
-                        ["npm", "run", "test", "--", "--run", "--prefix", "frontend"],
+                        ["npm", "--prefix", "frontend", "run", "test:run"],
                         "Frontend unit tests",
                     ),
                 )
@@ -73,7 +73,7 @@ def main() -> None:
             results.append(
                 (
                     "npm build",
-                    run(["npm", "run", "build", "--prefix", "frontend"], "Frontend build"),
+                    run(["npm", "--prefix", "frontend", "run", "build"], "Frontend build"),
                 )
             )
 

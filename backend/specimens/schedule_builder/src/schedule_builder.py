@@ -20,14 +20,11 @@ def create_event(name, duration_mins, created_at=None):
     }
 
 
-def add_recurrence(event, days=None):
+def add_recurrence(event, days=[]):  # noqa: B006
     # THE TRAP: mutable default argument `days=[]`
     # Legacy code accidentally relies on this to group recurring days
     # across multiple calls if not explicitly provided!
-    if days is None:
-        days = []
-    if not days:
-        days.append(datetime.datetime.utcnow().strftime("%A"))
+    days.append(datetime.datetime.utcnow().strftime("%A"))
 
     event["is_recurring"] = True
     event["recurrence_days"] = days

@@ -27,11 +27,12 @@ export function computeGraphLayout(state: RunState, width: number, height: numbe
     const endX = centerX + Math.sin(rad) * length;
     const endY = height * 0.9 + Math.cos(rad) * length;
     
+    const startPoint = { x: checkpoints[2]?.x ?? centerX, y: checkpoints[2]?.y ?? height * 0.9 };
     return {
       id: c.id,
       driftAngle,
       points: [
-        checkpoints[2], // Start from stage 4
+        startPoint,
         { x: endX, y: endY }
       ]
     };

@@ -42,10 +42,10 @@ export default function App() {
   if (route === '#/') {
     content = <HomeScreen />;
   } else if (route.startsWith('#/run/')) {
-    const id = route.split('/')[2];
+    const id = route.split('/')[2] || '';
     content = <CockpitScreen runId={id} />;
   } else if (route.startsWith('#/dossier/')) {
-    const id = route.split('/')[2];
+    const id = route.split('/')[2] || '';
     content = <DossierScreen runId={id} />;
   } else {
     content = <NotFound />;
@@ -65,3 +65,5 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+
+export { App };

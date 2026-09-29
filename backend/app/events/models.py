@@ -62,6 +62,12 @@ class RunCancelledData(BaseModel):
     reason: str = "User cancelled"
 
 
+class RunCompletedData(BaseModel):
+    duration_seconds: float = 0.0
+    verdict: str = "holds"
+    winner_id: str | None = None
+
+
 # ---------------------------------------------------------------------------
 # Stage lifecycle
 # ---------------------------------------------------------------------------

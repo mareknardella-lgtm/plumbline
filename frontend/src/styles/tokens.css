@@ -1,0 +1,89 @@
+:root {
+  /* Color tokens — Light "Vellum" */
+  --sheet: #EEF1F3;
+  --panel: #FAFBFB;
+  --ink: #1B2127;
+  --ink-2: #46515C;
+  --ink-3: #59636E;
+  --rule: #CBD2D8;
+  --rule-strong: #A9B3BC;
+  --plumb: #2350C8;
+  --holds: #0F6B4F;
+  --drift: #B93A2B;
+  --caution: #8A5F00;
+  --plumb-tint: #DCE6FB;
+  --holds-tint: #D8EFE6;
+  --drift-tint: #F7DDD8;
+  --caution-tint: #F3E6C4;
+
+  /* Typography */
+  --font-ui: 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Type scale (px) */
+  --text-xs: 0.75rem;   /* 12px */
+  --text-sm: 0.875rem;  /* 14px */
+  --text-base: 1rem;    /* 16px */
+  --text-lg: 1.25rem;   /* 20px */
+  --text-xl: 1.5625rem; /* 25px */
+  --text-2xl: 1.9375rem;/* 31px */
+  --text-3xl: 2.75rem;  /* 44px */
+
+  /* Space (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+
+  /* Radii */
+  --radius-control: 6px;
+  --radius-panel: 10px;
+  --radius-code: 4px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-popover: 0 8px 24px rgb(27 33 39 / 0.14);
+}
+
+/* Dark theme "Lamplight" */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sheet: #171E26;
+    --panel: #1D2630;
+    --ink: #E7ECF0;
+    --ink-2: #B6C0CA;
+    --ink-3: #97A3AF;
+    --rule: #303B47;
+    --rule-strong: #465361;
+    --plumb: #86A8FF;
+    --holds: #63D3A9;
+    --drift: #FF9082;
+    --caution: #E5B44E;
+    --plumb-tint: rgba(35, 80, 200, 0.2);
+    --holds-tint: rgba(15, 107, 79, 0.2);
+    --drift-tint: rgba(185, 58, 43, 0.2);
+    --caution-tint: rgba(138, 95, 0, 0.2);
+  }
+}
+
+[data-theme="dark"] {
+  --sheet: #171E26;
+  --panel: #1D2630;
+  --ink: #E7ECF0;
+  --ink-2: #B6C0CA;
+  --ink-3: #97A3AF;
+  --rule: #303B47;
+  --rule-strong: #465361;
+  --plumb: #86A8FF;
+  --holds: #63D3A9;
+  --drift: #FF9082;
+  --caution: #E5B44E;
+  --plumb-tint: rgba(35, 80, 200, 0.2);
+  --holds-tint: rgba(15, 107, 79, 0.2);
+  --drift-tint: rgba(185, 58, 43, 0.2);
+  --caution-tint: rgba(138, 95, 0, 0.2);
+}

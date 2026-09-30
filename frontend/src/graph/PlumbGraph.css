@@ -82,6 +82,7 @@
   stroke: var(--rule);
   stroke-width: 1.5px;
   stroke-dasharray: 4 4;
+  pointer-events: none;
 }
 
 /* Anchor mark */

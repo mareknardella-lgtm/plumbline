@@ -15,7 +15,7 @@
 | R5 | Track chosen | ✅ | Coding and Agentic Engineering (Master prompt §3) |
 | R6 | Project description | ✅ | Full 700-1000 word description in `docs/submission/DEVPOST.md` |
 | R7 | Working demo URL | ✅ | Dockerfile, docker-compose.yml, and FastAPI unified serving verified |
-| R8 | Demo video ≤ 3 min | ✅ | Storyboard and 2:45 voiceover script in `docs/submission/VIDEO_SCRIPT.md` |
+| R8 | Demo video ≤ 3 min | ✅ | Encoded 01:54 HD video with synchronized English voiceover in `docs/submission/demo_video.mp4` |
 | R9 | Public repository | ✅ | Published at https://github.com/mareknardella-lgtm/plumbline (tag v1.0.0) |
 | R10 | Open-source license | ✅ | MIT License added in `LICENSE` |
 | R11 | README with setup | ✅ | 16-section README with architecture, quickstart, and testing instructions |
@@ -80,6 +80,8 @@
 | 2026-09-30 | Backend hardening pass: `/api/replays/{id}/events` now returns 404 for unknown or unsafe ids instead of an empty 200 stream (EventSource retried it forever), replay ids are validated against the replays directory to block path traversal, and stage 6 `pins.zip` is a real archive containing the stage 2 characterization tests instead of a hardcoded empty-zip header. Added 8 regression tests (`test_replays_api.py`, `test_stage6_artifacts.py`). `check.py` 100% green. | Final verification & push |
 | 2026-09-30 | Killer Hackathon Features Added: 1) Automated GitHub Action (`.github/workflows/plumbline-verify.yml`) & CLI runner (`action_runner.py`) for automated PR verification comments. 2) Empirical "Standard AI vs Plumbline" study modal (`AIVsPlumblineModal.tsx`) showing 78.4% silent drift rate in GPT-4o/Claude/Copilot vs 0.0% in Plumbline. 3) Cryptographically sealed, downloadable HTML Compliance Certificate (`DossierScreen.tsx`). 4) Interactive "Trap Playground" challenge modal (`TrapPlaygroundModal.tsx`) for side-by-side probe testing. 5) Multi-language specimen: TypeScript/JS currency engine (`currency_exchange.ts`) testing IEEE-754 precision and `Math.round(-1.5)` rounding traps. 100% green quality check. | Commit, tag v1.3.0, and push |
 | 2026-09-30 | Luxury UI & Audio Feedback Overhaul: 1) Top unified `Navbar` with swinging plumbline pendulum logo, live Sandboxes status pill, and direct access to Architecture, Benchmarks, AI Study, and Trap Playground across all screens. 2) Fast-Track Judge Banner with 1-click instant demo. 3) Scientific Metrics Ribbon (1.64ms COW fork, 0.0% drift, 92.5% mutation catch rate, SHA-256 seal). 4) Interactive Specimen Cards with inline "Inspect Trap Code" drawer highlighting exact subtle trap lines. 5) Plumb Graph Candidate Telemetry popover showing deflection angle $\theta$, drift metric, and probe matrix. 6) Procedural Web Audio synthesizer (`sound.ts`) for tactile audio feedback. 7) 16/16 backend tests pass, 100% green `check.py`. | Final git commit & push tag v1.4.0 |
+| 2026-09-30 | Demo Video & Final Media Production: 1) Automated Playwright 7-scene choreography script (`record_walkthrough.cjs`) capturing full 1440x900 walkthrough of Home, Fast-Track Demo, AI Study, Trap Playground, Specimen Traps, Cockpit, Plumb Graph, and Certified Dossier. 2) Synchronized English voiceover synthesized via SAPI (`generate_audio.ps1`). 3) Encoded and finalized `docs/submission/demo_video.mp4` (01:54 duration, H.264/AAC, 1440x900, 8.6 MB). 4) Re-captured and verified all 6 official 1440x900 screenshots with the latest luxury UI. 5) All 19 hackathon requirements R1–R19 verified. Quality check `scripts/check.py` 100% green. | Tag v1.5.0 and submit to Devpost |
+
 
 
 

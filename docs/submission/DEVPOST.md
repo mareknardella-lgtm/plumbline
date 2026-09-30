@@ -117,7 +117,7 @@ We utilized the official `contree-sdk` (Token Factory Sandboxes Python SDK) with
 ## Try it out links
 - **Live Demo:** `http://localhost:8000` (or public hackathon URL)
 - **Repository:** `https://github.com/mareknardella-lgtm/plumbline`
-- **Demo Video:** `https://www.youtube.com/watch?v=YOUR_VIDEO_ID` (sostituisci con il link del tuo video YouTube)
+- **Demo Video:** `https://www.youtube.com/watch?v=YOUR_VIDEO_ID` *(Replace with your uploaded YouTube/Vimeo video link, or upload `docs/submission/demo_video.mp4` directly to Devpost)*
 
 ---
 

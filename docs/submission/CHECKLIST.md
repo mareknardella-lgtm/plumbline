@@ -16,7 +16,7 @@ Ensure every item below is verified before submitting the Devpost form.
 - [x] Runs on Nebius Token Factory inference with runtime calls verified in ledger.
 - [x] Utilizes NVIDIA Nemotron 3 open models (`Nemotron-3-Ultra-550b-a55b`, `nemotron-3-super-120b-a12b`, `NVIDIA-Nemotron-3-Nano-30B-A3B`).
 - [x] Token Factory Sandboxes are central to the pipeline (copy-on-write baseline forks, AST mutant verification, test execution).
-- [x] Original work; all third-party dependencies cataloged in `docs/THIRD_PARTY.md`; no copied code.
+- [x] Original work; all third-party dependencies cataloged in `THIRD_PARTY.md`; no copied code.
 - [x] Single quality command `uv run python scripts/check.py` passes 100% green.
 
 ---

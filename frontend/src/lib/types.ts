@@ -42,6 +42,8 @@ export interface RunState {
   candidates: CandidateStrategy[];
   mutants: MutantResultStatus[];
   verdict: VerdictOutcome | null;
+  winner_id?: string | null;
+  verdictSentence?: string;
   logs: string[];
   ledger: any[];
   dossier: any | null;

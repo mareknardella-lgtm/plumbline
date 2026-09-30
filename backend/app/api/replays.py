@@ -21,7 +21,7 @@ async def stream_replay_events(replay_id: str, request: Request, speed: float = 
             async for env in engine.stream_replay(replay_id, speed):
                 if await request.is_disconnected():
                     break
-                yield {"event": env.type, "id": str(env.seq), "data": env.model_dump_json()}
+                yield {"event": "message", "id": str(env.seq), "data": env.model_dump_json()}
         except FileNotFoundError:
             pass  # In real app handle properly
 

@@ -1,50 +1,231 @@
-.plumb-graph-container {
+.plumb-graph-wrapper {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  background: var(--bg-surface);
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100%;
 }
 
-.plumb-baseline {
-  stroke: var(--plumb, #0066cc);
+.graph-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.view-toggle-btn {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.view-toggle-btn:hover {
+  background: var(--panel);
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+.plumb-svg-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  width: 100%;
+  max-width: 620px;
+  box-sizing: border-box;
+}
+
+.plumb-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+}
+
+/* Guideline (vertical baseline) */
+.plumb-guideline {
+  stroke: var(--rule);
   stroke-width: 1.5px;
   stroke-dasharray: 4 4;
 }
 
-.plumb-anchor {
-  fill: var(--plumb, #0066cc);
+/* Anchor mark */
+.plumb-anchor-bracket {
+  fill: var(--ink-2);
 }
 
-.plumb-checkpoint {
-  fill: var(--bg-surface);
-  stroke: var(--plumb, #0066cc);
+.plumb-anchor-dot {
+  fill: var(--plumb);
+}
+
+/* Checkpoints */
+.plumb-checkpoint-dot {
+  fill: var(--sheet);
+  stroke: var(--ink-3);
   stroke-width: 2px;
+  transition: all 0.3s ease;
 }
 
+.plumb-checkpoint-group.reached .plumb-checkpoint-dot {
+  stroke: var(--plumb);
+  fill: var(--plumb-tint);
+}
+
+.plumb-checkpoint-label {
+  font-family: var(--font-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  fill: var(--ink-3);
+}
+
+.plumb-checkpoint-group.reached .plumb-checkpoint-label {
+  fill: var(--ink);
+  font-weight: 600;
+}
+
+/* Tick strip (planted bugs) */
+.plumb-tick-bar {
+  stroke: var(--rule-strong);
+  stroke-width: 1px;
+}
+
+.tick-line {
+  stroke: var(--rule);
+  stroke-width: 1.5px;
+}
+
+.tick-dot-caught {
+  fill: var(--holds);
+}
+
+.tick-dot-survived {
+  fill: var(--caution);
+}
+
+.plumb-tick-caption {
+  font-family: var(--font-ui, sans-serif);
+  font-size: 11px;
+  fill: var(--ink-2);
+  font-weight: 500;
+}
+
+/* Candidate cables */
 .plumb-candidate {
   cursor: pointer;
-  transition: opacity 0.2s;
+  outline: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.plumb-candidate:hover {
-  opacity: 0.8;
+.plumb-candidate:focus-visible .plumb-bob-outer {
+  stroke-width: 3px;
+  stroke: var(--plumb);
 }
 
-.plumb-cable {
-  stroke: var(--text-muted);
+.plumb-candidate.dimmed {
+  opacity: 0.35;
+}
+
+.plumb-cable.base {
+  stroke: var(--plumb);
   stroke-width: 2px;
 }
 
-.plumb-bob {
-  fill: var(--bg-surface);
-  stroke: var(--text-default);
+.plumb-cable.drift {
+  stroke: var(--drift);
+  stroke-width: 2.5px;
+  stroke-dasharray: 4 2;
+}
+
+.drift-point {
+  fill: var(--drift);
+}
+
+/* Candidate bobs */
+.plumb-bob-outer {
+  fill: var(--sheet);
+  stroke: var(--plumb);
   stroke-width: 2px;
+  transition: transform 0.2s ease, fill 0.3s ease;
+}
+
+.plumb-candidate.winner .plumb-bob-outer {
+  fill: var(--holds);
+  stroke: var(--holds);
+}
+
+.plumb-bob-text {
+  font-family: var(--font-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+.plumb-candidate.winner .plumb-bob-text {
+  fill: #ffffff;
+}
+
+.plumb-bob-label {
+  font-family: var(--font-code, monospace);
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.plumb-candidate:hover .plumb-bob-outer {
+  transform: scale(1.15);
+}
+
+/* Verdict banner */
+.plumb-verdict-banner {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  animation: settleIn 0.5s ease-out;
+}
+
+.plumb-verdict-banner.held {
+  background: var(--holds-tint);
+  color: var(--holds);
+  border: 1px solid var(--holds);
+}
+
+.plumb-verdict-banner.dropped {
+  background: var(--drift-tint);
+  color: var(--drift);
+  border: 1px solid var(--drift);
+}
+
+@keyframes settleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .plumb-candidate {
-    transition: none;
+  .plumb-candidate,
+  .plumb-verdict-banner {
+    transition: none !important;
+    animation: none !important;
   }
 }

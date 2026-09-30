@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import './PlumbGraph.css';
 import { RunState } from '../lib/types';
 import { computeGraphLayout } from './geometry';
+import PlumbGraphTable from './PlumbGraphTable';
 
 interface PlumbGraphProps {
   state: RunState;
@@ -10,36 +11,230 @@ interface PlumbGraphProps {
   onCandidateSelect?: (id: string) => void;
 }
 
-export default function PlumbGraph({ state, width = 600, height = 400, onCandidateSelect }: PlumbGraphProps) {
+export default function PlumbGraph({
+  state,
+  width = 620,
+  height = 460,
+  onCandidateSelect,
+}: PlumbGraphProps) {
+  const [showTable, setShowTable] = useState(false);
+  const [hoveredCandidate, setHoveredCandidate] = useState<string | null>(null);
+
   const layout = useMemo(() => computeGraphLayout(state, width, height), [state, width, height]);
 
+  if (showTable) {
+    return (
+      <div className="plumb-graph-wrapper">
+        <div className="graph-toolbar">
+          <button className="view-toggle-btn" onClick={() => setShowTable(false)}>
+            Show as Graph
+          </button>
+        </div>
+        <PlumbGraphTable state={state} />
+      </div>
+    );
+  }
+
+  const ariaSummary = `Plumb graph. Current stage ${state.currentStage} of 6. ${state.candidates.length} candidates. Verdict: ${state.verdict || 'in progress'}.`;
+
   return (
-    <div className="plumb-graph-container">
-      <svg width={width} height={height} role="img" aria-label="Plumb graph visualizing candidate runs">
-        {/* Baseline */}
-        <line x1={layout.baselineX} y1={layout.anchor.y} x2={layout.baselineX} y2={height} className="plumb-baseline" />
-        
-        {/* Anchor */}
-        <circle cx={layout.anchor.x} cy={layout.anchor.y} r={6} className="plumb-anchor" />
+    <div className="plumb-graph-wrapper">
+      <div className="graph-toolbar">
+        <button
+          className="view-toggle-btn"
+          onClick={() => setShowTable(true)}
+          title="Switch to accessible tabular view"
+        >
+          Show as Table
+        </button>
+      </div>
 
-        {/* Checkpoints */}
-        {layout.checkpoints.map((cp, i) => (
-          <circle key={i} cx={cp.x} cy={cp.y} r={4} className="plumb-checkpoint" />
-        ))}
+      <div className="plumb-svg-container">
+        <svg
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={ariaSummary}
+          className="plumb-svg"
+        >
+          {/* Subtle grid and vertical plumb guideline */}
+          <line
+            x1={layout.baselineX}
+            y1={layout.anchor.y}
+            x2={layout.baselineX}
+            y2={layout.baselineEndY}
+            className="plumb-guideline"
+          />
 
-        {/* Candidates */}
-        {layout.candidates.map((c) => {
-          const start = c.points[0];
-          const end = c.points[1];
-          if (!start || !end) return null;
-          return (
-            <g key={c.id} className="plumb-candidate" onClick={() => onCandidateSelect?.(c.id)}>
-              <line x1={start.x} y1={start.y} x2={end.x} y2={end.y} className="plumb-cable" />
-              <circle cx={end.x} cy={end.y} r={8} className="plumb-bob" />
+          {/* Anchor top mark */}
+          <g className="plumb-anchor-group">
+            <rect
+              x={layout.anchor.x - 12}
+              y={layout.anchor.y - 12}
+              width={24}
+              height={6}
+              rx={3}
+              className="plumb-anchor-bracket"
+            />
+            <circle
+              cx={layout.anchor.x}
+              cy={layout.anchor.y}
+              r={5}
+              className="plumb-anchor-dot"
+            />
+          </g>
+
+          {/* Checkpoints along baseline */}
+          {layout.checkpoints.map(cp => {
+            const isReached = state.currentStage >= cp.stage;
+            return (
+              <g key={cp.stage} className={`plumb-checkpoint-group ${isReached ? 'reached' : ''}`}>
+                <circle
+                  cx={cp.x}
+                  cy={cp.y}
+                  r={5}
+                  className="plumb-checkpoint-dot"
+                />
+                <text
+                  x={cp.x + 14}
+                  y={cp.y + 4}
+                  className="plumb-checkpoint-label"
+                >
+                  {cp.label}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Tick strip for planted bugs (Stage 3) */}
+          {layout.ticks.length > 0 && (
+            <g className="plumb-tick-strip">
+              <line
+                x1={layout.ticks[0]?.x ? layout.ticks[0].x - 10 : layout.baselineX - 100}
+                y1={175}
+                x2={layout.ticks[layout.ticks.length - 1]?.x ? layout.ticks[layout.ticks.length - 1]!.x + 10 : layout.baselineX + 100}
+                y2={175}
+                className="plumb-tick-bar"
+              />
+              {layout.ticks.map(t => (
+                <g key={t.index} className={`plumb-tick tick-${t.status}`}>
+                  <line
+                    x1={t.x}
+                    y1={t.y - 6}
+                    x2={t.x}
+                    y2={t.y + 6}
+                    className="tick-line"
+                  />
+                  {t.status === 'caught' ? (
+                    <circle cx={t.x} cy={t.y} r={3} className="tick-dot-caught" />
+                  ) : (
+                    <circle cx={t.x} cy={t.y} r={3} className="tick-dot-survived" />
+                  )}
+                </g>
+              ))}
+              <text x={layout.baselineX} y={198} textAnchor="middle" className="plumb-tick-caption">
+                Planted bugs (tripwires): {layout.ticks.filter(t => t.status === 'caught').length}/{layout.ticks.length} caught
+              </text>
             </g>
-          );
-        })}
-      </svg>
+          )}
+
+          {/* Candidate cables and bobs (Stage 4 - 6) */}
+          {layout.candidates.map((c, i) => {
+            const isWinner = c.isWinner;
+            const isDimmed = state.verdict && !isWinner;
+            const isHovered = hoveredCandidate === c.id;
+            const candidateLetter = String.fromCharCode(65 + i); // A, B, C...
+
+            return (
+              <g
+                key={c.id}
+                className={`plumb-candidate ${isWinner ? 'winner' : ''} ${isDimmed ? 'dimmed' : ''} ${isHovered ? 'hovered' : ''}`}
+                onClick={() => onCandidateSelect?.(c.id)}
+                onMouseEnter={() => setHoveredCandidate(c.id)}
+                onMouseLeave={() => setHoveredCandidate(null)}
+                tabIndex={0}
+                role="button"
+                aria-label={`Candidate ${candidateLetter}: drift ${c.drift.toFixed(2)}, status ${c.status}`}
+              >
+                {/* Cable line: split into normal and drift segments if divergence exists */}
+                {c.divergencePoint ? (
+                  <>
+                    <line
+                      x1={c.cableStart.x}
+                      y1={c.cableStart.y}
+                      x2={c.divergencePoint.x}
+                      y2={c.divergencePoint.y}
+                      className="plumb-cable base"
+                    />
+                    <line
+                      x1={c.divergencePoint.x}
+                      y1={c.divergencePoint.y}
+                      x2={c.cableEnd.x}
+                      y2={c.cableEnd.y}
+                      className="plumb-cable drift"
+                    />
+                    {/* Small divergence indicator badge */}
+                    <circle
+                      cx={c.divergencePoint.x}
+                      cy={c.divergencePoint.y}
+                      r={3}
+                      className="drift-point"
+                    />
+                  </>
+                ) : (
+                  <line
+                    x1={c.cableStart.x}
+                    y1={c.cableStart.y}
+                    x2={c.cableEnd.x}
+                    y2={c.cableEnd.y}
+                    className="plumb-cable base"
+                  />
+                )}
+
+                {/* Candidate Bob */}
+                <g className="plumb-bob-group">
+                  <circle
+                    cx={c.cableEnd.x}
+                    cy={c.cableEnd.y}
+                    r={12}
+                    className="plumb-bob-outer"
+                  />
+                  <text
+                    x={c.cableEnd.x}
+                    y={c.cableEnd.y + 4}
+                    textAnchor="middle"
+                    className="plumb-bob-text"
+                  >
+                    {candidateLetter}
+                  </text>
+                  <text
+                    x={c.cableEnd.x}
+                    y={c.cableEnd.y + 24}
+                    textAnchor="middle"
+                    className="plumb-bob-label"
+                  >
+                    {c.drift === 0 ? 'Drift 0.0' : `Drift +${c.drift.toFixed(2)}`}
+                  </text>
+                </g>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Verdict sentence rendered beneath graph */}
+        {state.verdict && (
+          <div className={`plumb-verdict-banner ${state.verdict}`}>
+            <span className="verdict-icon">{state.verdict === 'held' ? '✓' : '✗'}</span>
+            <span className="verdict-text">
+              {state.verdictSentence ||
+                (state.verdict === 'held'
+                  ? 'Verdict: Candidate A held true. No behavioral divergence detected.'
+                  : 'Verdict: Behavioral drift detected across differential probes.')}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

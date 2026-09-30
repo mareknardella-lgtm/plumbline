@@ -144,6 +144,8 @@ export function reduceEvent(state: RunState, event: EventEnvelope): RunState {
       return {
         ...state,
         verdict: d.outcome === 'holds' ? 'held' : 'dropped',
+        winner_id: d.winner_id,
+        verdictSentence: d.sentence,
         logs: [...state.logs, `Verdict: ${d.outcome?.toUpperCase() || ''} - ${d.sentence || ''}`],
       };
 
@@ -159,6 +161,7 @@ export function reduceEvent(state: RunState, event: EventEnvelope): RunState {
       return {
         ...state,
         status: 'completed',
+        winner_id: d.winner_id || state.winner_id,
         logs: [...state.logs, `Run completed in ${d.duration_seconds || 0}s`],
       };
 

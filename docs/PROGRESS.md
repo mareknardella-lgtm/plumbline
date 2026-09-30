@@ -2,8 +2,8 @@
 
 ## Status
 - **Current phase:** 4 — Hardening
-- **Last gate:** Gate 2 (Dossier generated), Gate 3 (UI complete)
-- **Next step:** H2 checkpoint review, 3-specimen sweep
+- **Last gate:** Gate 2 (Dossier generated), Gate 3 (Live UI & Plumb Graph verified end-to-end)
+- **Next step:** H2/H3 checkpoint signoff, 3-specimen sweep, hardening
 
 ## Requirements R1–R19
 | # | Requirement | Status | Evidence |
@@ -34,6 +34,8 @@
 | 2026-09-29 | Project initialized as Plumbline | Master prompt §3 |
 | 2026-09-29 | Accelerated Phases 1-3 | User requested to proceed |
 | 2026-09-30 | Integrated official Contree SDK with graceful fallback | Sandboxes token permission limitations |
+| 2026-09-30 | Standardized SSE events to `event: message` | Browser native `EventSource.onmessage` compatibility |
+| 2026-09-30 | Responsive SVG viewBox & geometry spacing | Prevent viewport clipping and candidate label collision |
 
 ## Measured numbers
 | Date | What | Value | Source |
@@ -41,7 +43,8 @@
 | 2026-09-30 | Gate 2 Pipeline run duration | 1.61s | `scripts/test_pipeline.py` run |
 | 2026-09-30 | Test strength on invoice_totals | 90% (18/20 caught) | Stage 3 mutation run |
 | 2026-09-30 | Differential probes on candidate B | 7/50 divergent | Stage 5 probe run |
-| 2026-09-30 | Frontend build size | 237 KB JS / 10.4 KB CSS | `npm run build` |
+| 2026-09-30 | Live run end-to-end duration | 6.84s | Browser live execution |
+| 2026-09-30 | Frontend build size | 250.7 KB JS / 17.3 KB CSS | `npm run build` |
 
 ## Open questions
 - Sandboxes spawn permissions enablement on Token Factory account.
@@ -57,3 +60,4 @@
 | 2026-09-29 | Phase 0 started: project scaffolded, prerequisites verified | Run spikes S1–S5 (waiting for keys) |
 | 2026-09-29 | Phases 1-3: Core backend, pipeline, runtime, and frontend components implemented | Wire up UI to backend SSE, test with fake sandbox |
 | 2026-09-30 | Phase 2 complete: Pipeline implemented with 6 real stages, AST mutator, differential probes discovering rounding trap in invoice_totals. Gate 2 passed (`test_pipeline.py`). All 3 specimen traps verified (`verify_specimens.py`). 100% green `check.py`. | H2 checkpoint signoff, multi-specimen sweep |
+| 2026-09-30 | Phase 3 complete & Gate 3 passed: Diagnosed and fixed SSE stream dispatch (`event: message`), resolved geometry clipping, tuned candidate bob separation. Verified live end-to-end in browser with Playwright: Plumb Graph renders guideline, checkpoints, mutant tick strip, swinging cables with divergence badges, settle animation, and verdict banner. Dossier view renders diff viewer and full evidence report. 100% green `check.py`. | Phase 4 Hardening (H3 signoff, sweep all specimens) |

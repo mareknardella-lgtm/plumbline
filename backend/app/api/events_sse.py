@@ -19,7 +19,7 @@ async def get_run_events(run_id: str, request: Request):
         # First yield missed events
         events = await app.state.event_bus.get_events(run_id, after_seq=after_seq)
         for env in events:
-            yield {"event": env.type, "id": str(env.seq), "data": env.model_dump_json()}
+            yield {"event": "message", "id": str(env.seq), "data": env.model_dump_json()}
 
         # Then subscribe to new events
         subscriber = app.state.event_bus.subscribe(run_id)
@@ -48,7 +48,7 @@ async def get_run_events(run_id: str, request: Request):
                         result = task.result()
                         if task_type == "events":
                             yield {
-                                "event": result.type,
+                                "event": "message",
                                 "id": str(result.seq),
                                 "data": result.model_dump_json(),
                             }

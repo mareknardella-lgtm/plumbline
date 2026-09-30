@@ -1,0 +1,236 @@
+.study-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.study-modal-card {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel, 10px);
+  width: 100%;
+  max-width: 840px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+  color: var(--ink);
+}
+
+.study-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.study-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--plumb);
+  background: var(--plumb-tint);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.study-modal-header h3 {
+  margin: 6px 0 0 0;
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.close-btn:hover {
+  color: var(--ink);
+}
+
+.study-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.study-lead {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.study-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.study-stat-card {
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.study-stat-card.danger {
+  background: var(--drift-tint);
+  border: 1px solid var(--drift);
+}
+
+.study-stat-card.danger .stat-num {
+  color: var(--drift);
+}
+
+.study-stat-card.success {
+  background: var(--holds-tint);
+  border: 1px solid var(--holds);
+}
+
+.study-stat-card.success .stat-num {
+  color: var(--holds);
+}
+
+.study-stat-card.neutral {
+  background: var(--plumb-tint);
+  border: 1px solid var(--plumb);
+}
+
+.study-stat-card.neutral .stat-num {
+  color: var(--plumb);
+}
+
+.stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: var(--font-ui);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stat-desc {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.study-modal-body h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 8px 0 0 0;
+  color: var(--ink);
+}
+
+.study-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.study-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.study-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+.study-table tr.highlight-row {
+  background: var(--holds-tint);
+  font-weight: 600;
+}
+
+.text-danger {
+  color: var(--drift);
+  font-weight: 700;
+}
+
+.text-success {
+  color: var(--holds);
+  font-weight: 700;
+}
+
+.trap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.trap-item {
+  padding: 12px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.trap-item strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.trap-item p {
+  margin: 0;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+
+.study-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sheet);
+}
+
+.study-footer-note {
+  font-size: 11px;
+  color: var(--ink-3);
+  max-width: 580px;
+}
+
+.study-close-btn {
+  background: var(--plumb);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-control, 6px);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.study-close-btn:hover {
+  filter: brightness(1.1);
+}

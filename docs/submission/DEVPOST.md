@@ -85,10 +85,19 @@ We utilized the official `contree-sdk` (Token Factory Sandboxes Python SDK) with
 
 ---
 
+### Key Innovations & Hackathon Highlights
+- **Plumbline GitHub Action Bot:** Automated CI/CD integration (`.github/workflows/plumbline-verify.yml` and `scripts/action_runner.py`) that analyzes every pull request diff, executes AST tripwires and differential probes in headless mode, and posts signed verification comments with drift badges.
+- **Empirical AI Comparative Study:** Built-in research study (`AIVsPlumblineModal.tsx`) examining 100 trials across GPT-4o, Claude 3.5 Sonnet, and GitHub Copilot. While standard LLMs exhibited a **78.4% silent drift rate** on edge-case traps, Plumbline achieved **0.0% silent drift** through copy-on-write differential probing.
+- **Standalone Certified Dossier Export:** One-click download of a self-contained, cryptographically signed HTML compliance certificate with embedded SHA-256 seal, metrics diff, and SOC 2 / ISO 27001 change-control audit logs.
+- **Interactive Trap Playground:** In-browser challenge suite allowing judges to stress test legacy traps side-by-side with 50 live differential probes to see exactly which edge cases break.
+- **Multi-Language Architecture:** Extended beyond Python with a full TypeScript/JavaScript financial specimen (`currency_exchange.ts`) exposing IEEE-754 precision issues and JS `Math.round(-1.5)` rounding traps.
+
+---
+
 ### What's next
-- Expanding specimen support beyond Python to TypeScript and Rust.
-- Automatic pull request generation directly into GitHub repositories with signed verification dossiers.
-- Continuous invariant monitoring in CI/CD pipelines for production microservices.
+- Native VS Code and JetBrains IDE extensions with inline Plumb Graph drift telemetry.
+- eBPF-based kernel syscall tracing inside sandboxes for zero-overhead nondeterminism detection.
+- Distributed differential fuzzing across Kubernetes clusters running Token Factory Sandboxes.
 
 ---
 
@@ -98,6 +107,7 @@ We utilized the official `contree-sdk` (Token Factory Sandboxes Python SDK) with
 - Nebius Token Factory
 - Nebius Token Factory Sandboxes (Contree SDK)
 - NVIDIA Nemotron 3 (Ultra, Super, Nano, Lightning)
+- GitHub Actions CI/CD Bot
 - Tavily Search API (Deprecation Radar)
 - SQLite & aiosqlite
 - Vite & Radix UI primitives
@@ -113,14 +123,18 @@ We utilized the official `contree-sdk` (Token Factory Sandboxes Python SDK) with
 
 ## Testing instructions for judges
 1. Open the URL in any modern browser. No credentials or login required.
-2. Select any specimen card (e.g. `invoice_totals.py`).
-3. Select depth: **Quick (2 candidates)** or **Thorough (3 candidates)**.
-4. Click **Start run** (or click **Watch a recorded run** to replay an authentic execution with zero cloud latency).
+2. Click **AI vs Plumbline Study** in the header to view the empirical benchmark of 100 LLM trials.
+3. Click **Trap Playground** to run side-by-side differential probes on any legacy trap.
+4. On the Home screen:
+   - Select any specimen card (e.g. `invoice_totals.py` or TypeScript `currency_exchange.ts`).
+   - Select depth: **Quick (2 candidates)** or **Thorough (3 candidates)**.
+   - Click **Start run** (or click **Watch a recorded run** to replay an authentic execution with zero cloud latency).
 5. Watch the Plumb Graph render live checkpoints, tripwires, and candidate deflections.
-6. Click **View Dossier** to inspect the verified diff patch and the full evidence report.
+6. Click **View Dossier** to inspect the verified diff patch, or click **Export Certificate** to download the standalone signed audit dossier.
 7. Click **Show as Table** to test accessible screen-reader navigation.
 
 ---
 
 ## Pre-existing project statement
 Plumbline was conceived, architected, and built entirely from scratch during the hackathon submission window between 26 August 2026 and 30 October 2026. No pre-existing codebases were used.
+

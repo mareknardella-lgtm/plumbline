@@ -5,6 +5,8 @@ import Chip from '../components/Chip';
 import SegmentedControl from '../components/SegmentedControl';
 import ArchitectureDrawer from '../components/ArchitectureDrawer';
 import BenchmarksModal from '../components/BenchmarksModal';
+import AIVsPlumblineModal from '../components/AIVsPlumblineModal';
+import TrapPlaygroundModal from '../components/TrapPlaygroundModal';
 import { createRun } from '../lib/api';
 
 export default function HomeScreen() {
@@ -16,6 +18,8 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [isArchOpen, setIsArchOpen] = useState(false);
   const [isBenchOpen, setIsBenchOpen] = useState(false);
+  const [isAiStudyOpen, setIsAiStudyOpen] = useState(false);
+  const [isTrapPlaygroundOpen, setIsTrapPlaygroundOpen] = useState(false);
   const [githubUrl, setGithubUrl] = useState('');
   const [fetchingUrl, setFetchingUrl] = useState(false);
   const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('nebius_byok_key') || '');
@@ -83,6 +87,12 @@ export default function HomeScreen() {
       lines: 244,
       hint: 'Deprecated utcnow() and mutable default recurrence trap',
     },
+    {
+      id: 'currency_exchange',
+      title: 'currency_exchange.ts (P2 Multi-Lang)',
+      lines: 160,
+      hint: 'IEEE-754 precision & JS Math.round negative integer trap',
+    },
   ];
 
   const goals = [
@@ -115,6 +125,22 @@ export default function HomeScreen() {
             aria-label="Open empirical benchmarks and evaluation report"
           >
             Benchmarks
+          </button>
+          <button
+            type="button"
+            className="how-it-works-btn"
+            onClick={() => setIsAiStudyOpen(true)}
+            aria-label="Open Standard AI vs Plumbline comparative study"
+          >
+            AI vs Plumbline Study
+          </button>
+          <button
+            type="button"
+            className="how-it-works-btn"
+            onClick={() => setIsTrapPlaygroundOpen(true)}
+            aria-label="Open interactive Trap Playground"
+          >
+            Trap Playground
           </button>
           <div className="header-status">
             <span className="status-dot online" />
@@ -321,6 +347,16 @@ export default function HomeScreen() {
       <BenchmarksModal
         isOpen={isBenchOpen}
         onClose={() => setIsBenchOpen(false)}
+      />
+
+      <AIVsPlumblineModal
+        isOpen={isAiStudyOpen}
+        onClose={() => setIsAiStudyOpen(false)}
+      />
+
+      <TrapPlaygroundModal
+        isOpen={isTrapPlaygroundOpen}
+        onClose={() => setIsTrapPlaygroundOpen(false)}
       />
     </div>
   );

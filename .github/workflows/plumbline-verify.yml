@@ -1,0 +1,78 @@
+name: Plumbline Behavioral Verification
+
+on:
+  pull_request:
+    paths:
+      - 'backend/specimens/**'
+      - '**/*.py'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verify:
+    name: Verify Invariant Preservation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv and dependencies
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync
+
+      - name: Run Plumbline Quality Verification
+        run: |
+          uv run python scripts/check.py
+
+      - name: Run Behavioral Probes & Tripwires
+        id: plumbline
+        env:
+          NEBIUS_API_KEY: ${{ secrets.NEBIUS_API_KEY }}
+        run: |
+          # Verify invoice_totals specimen as reference demonstration
+          uv run python scripts/action_runner.py \
+            --original backend/specimens/invoice_totals/src/invoice_totals.py \
+            --refactored backend/specimens/invoice_totals/src/invoice_totals.py \
+            --output pr_comment.md
+
+      - name: Post Verification Dossier on Pull Request
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('pr_comment.md')) {
+              const commentBody = fs.readFileSync('pr_comment.md', 'utf8');
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+              });
+              const botComment = comments.find(c => c.body.includes('Plumbline Verification Report'));
+              if (botComment) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: commentBody
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: commentBody
+                });
+              }
+            }

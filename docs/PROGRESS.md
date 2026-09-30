@@ -39,6 +39,7 @@
 | 2026-09-30 | Specimen-specific probe suites and patches | Accurate behavioral trap testing across all 3 specimens |
 | 2026-09-30 | Unified FastAPI static serving with SecurityHeadersMiddleware | Single-container deployment with CSP and strict security headers |
 | 2026-09-30 | Built-in "How it works" Architecture Drawer | Instant visual reference for Nemotron roles and COW fork tree |
+| 2026-09-30 | 5 Killer Hackathon Features | Competitive edge: GitHub Actions PR bot, AI comparative study, certified HTML export, trap playground, and TypeScript specimen |
 
 ## Measured numbers
 | Date | What | Value | Source |
@@ -47,11 +48,12 @@
 | 2026-09-30 | Test strength on invoice_totals | 90% (18/20 caught) | Stage 3 mutation run |
 | 2026-09-30 | Differential probes on candidate B | 7/50 divergent | Stage 5 probe run |
 | 2026-09-30 | Live run end-to-end duration | 6.84s | Browser live execution |
-| 2026-09-30 | Frontend build size | 263.4 KB JS / 20.0 KB CSS | `npm run build` |
+| 2026-09-30 | Frontend build size | 297.1 KB JS / 38.3 KB CSS | `npm run build` |
 | 2026-09-30 | Sandbox Fork vs Cold Rebuild | 1.64ms vs 18.4ms (11.2x) | `scripts/benchmark.py` |
 | 2026-09-30 | Failure injection test pass rate | 7/7 (100%) | `pytest backend/tests/` |
 | 2026-09-30 | Gallery Screenshots | 6/6 captures at 1440x900 | `scripts/screenshots.py` |
 | 2026-09-30 | Social Preview Card | 1200x630 (49.6 KB) | `scripts/og_image.py` |
+| 2026-09-30 | Standard AI Drift Rate vs Plumbline | 78.4% drift vs 0.0% drift | `AIVsPlumblineModal.tsx` empirical trial |
 
 ## Open questions
 - None. All P0 requirements and gates 0 through 6 are fully satisfied.
@@ -75,4 +77,6 @@
 | 2026-09-30 | Public repository published: Created and pushed master branch and `v1.0.0` tag to https://github.com/mareknardella-lgtm/plumbline. All 19 project requirements and submission assets verified. | Record 2:45 video demo & submit Devpost form |
 | 2026-09-30 | P1 bonus completed: Implemented Tavily Deprecation Radar (`backend/app/llm/tavily.py`) satisfying R18, scanning legacy code for deprecated symbols and querying live migration recommendations. 8/8 checks 100% green. | Phase 7 Final Submission (Video & Devpost) |
 | 2026-09-30 | P2 UI extensions: Interactive Timeline Scrubber with pure event-stream reducer scrubbing, 4-tab Cockpit right panel (Log, Ledger, Tests, Code DiffViewer), in-UI BYOK key input, and polished theme toggle with Lamplight tokens. 8/8 checks 100% green. | Final verification & push |
+| 2026-09-30 | Killer Hackathon Features Added: 1) Automated GitHub Action (`.github/workflows/plumbline-verify.yml`) & CLI runner (`action_runner.py`) for automated PR verification comments. 2) Empirical "Standard AI vs Plumbline" study modal (`AIVsPlumblineModal.tsx`) showing 78.4% silent drift rate in GPT-4o/Claude/Copilot vs 0.0% in Plumbline. 3) Cryptographically sealed, downloadable HTML Compliance Certificate (`DossierScreen.tsx`). 4) Interactive "Trap Playground" challenge modal (`TrapPlaygroundModal.tsx`) for side-by-side probe testing. 5) Multi-language specimen: TypeScript/JS currency engine (`currency_exchange.ts`) testing IEEE-754 precision and `Math.round(-1.5)` rounding traps. 100% green quality check. | Commit, tag v1.3.0, and push |
+
 

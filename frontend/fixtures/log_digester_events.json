@@ -1,0 +1,581 @@
+[
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 1,
+    "ts": "2026-09-30T15:39:15.123064",
+    "type": "run.started",
+    "data": {
+      "mode": "quick",
+      "source_type": "specimen",
+      "specimen_name": "log_digester",
+      "goal": "Modernize to Python 3.12 and preserve exact behavior"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 2,
+    "ts": "2026-09-30T15:39:15.131366",
+    "type": "stage.started",
+    "data": {
+      "stage": 1,
+      "name": "Read the code"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 3,
+    "ts": "2026-09-30T15:39:15.139894",
+    "type": "survey.report",
+    "data": {
+      "functions_found": 6,
+      "risks": [
+        "Global tax rate state",
+        "Mixed banker's rounding and half-up rounding",
+        "Implicit type coercions"
+      ],
+      "nondeterminism": [],
+      "candidate_plans": [
+        "conservative",
+        "balanced",
+        "ambitious"
+      ]
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 4,
+    "ts": "2026-09-30T15:39:15.151050",
+    "type": "stage.completed",
+    "data": {
+      "stage": 1,
+      "name": "Read the code",
+      "summary": "Completed Read the code",
+      "elapsed_seconds": 0.01
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 5,
+    "ts": "2026-09-30T15:39:15.161292",
+    "type": "stage.started",
+    "data": {
+      "stage": 2,
+      "name": "Record behavior"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 6,
+    "ts": "2026-09-30T15:39:15.166575",
+    "type": "pins.written",
+    "data": {
+      "count": 14,
+      "coverage_percent": 92.5
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 7,
+    "ts": "2026-09-30T15:39:15.172644",
+    "type": "pins.result",
+    "data": {
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "flaky": 0,
+      "run_index": 1
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 8,
+    "ts": "2026-09-30T15:39:15.179716",
+    "type": "pins.result",
+    "data": {
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "flaky": 0,
+      "run_index": 2
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 9,
+    "ts": "2026-09-30T15:39:15.185525",
+    "type": "checkpoint.created",
+    "data": {
+      "checkpoint_uuid": "chk-1c08a52f",
+      "label": "baseline_with_pins"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 10,
+    "ts": "2026-09-30T15:39:15.193982",
+    "type": "stage.completed",
+    "data": {
+      "stage": 2,
+      "name": "Record behavior",
+      "summary": "Completed Record behavior",
+      "elapsed_seconds": 0.03
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 11,
+    "ts": "2026-09-30T15:39:15.203032",
+    "type": "stage.started",
+    "data": {
+      "stage": 3,
+      "name": "Plant bugs to test the tests"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 12,
+    "ts": "2026-09-30T15:39:15.261975",
+    "type": "mutants.planned",
+    "data": {
+      "total": 11,
+      "by_function": {
+        "unknown": 11
+      }
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 13,
+    "ts": "2026-09-30T15:39:15.267482",
+    "type": "mutant.result",
+    "data": {
+      "index": 1,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 49
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 14,
+    "ts": "2026-09-30T15:39:15.296592",
+    "type": "mutant.result",
+    "data": {
+      "index": 2,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 24
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 15,
+    "ts": "2026-09-30T15:39:15.327013",
+    "type": "mutant.result",
+    "data": {
+      "index": 3,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 24
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 16,
+    "ts": "2026-09-30T15:39:15.374028",
+    "type": "mutant.result",
+    "data": {
+      "index": 4,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 10
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 17,
+    "ts": "2026-09-30T15:39:15.419881",
+    "type": "mutant.result",
+    "data": {
+      "index": 5,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 28
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 18,
+    "ts": "2026-09-30T15:39:15.465344",
+    "type": "mutant.result",
+    "data": {
+      "index": 6,
+      "function_name": "unknown",
+      "operator": "comparison_swap",
+      "status": "caught",
+      "line": 33
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 19,
+    "ts": "2026-09-30T15:39:15.511777",
+    "type": "mutant.result",
+    "data": {
+      "index": 7,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 10
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 20,
+    "ts": "2026-09-30T15:39:15.557469",
+    "type": "mutant.result",
+    "data": {
+      "index": 8,
+      "function_name": "unknown",
+      "operator": "arithmetic_swap",
+      "status": "caught",
+      "line": 67
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 21,
+    "ts": "2026-09-30T15:39:15.587736",
+    "type": "mutant.result",
+    "data": {
+      "index": 9,
+      "function_name": "unknown",
+      "operator": "arithmetic_swap",
+      "status": "caught",
+      "line": 67
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 22,
+    "ts": "2026-09-30T15:39:15.618798",
+    "type": "mutant.result",
+    "data": {
+      "index": 10,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 24
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 23,
+    "ts": "2026-09-30T15:39:15.664884",
+    "type": "mutant.result",
+    "data": {
+      "index": 11,
+      "function_name": "unknown",
+      "operator": "constant_shift",
+      "status": "caught",
+      "line": 10
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 24,
+    "ts": "2026-09-30T15:39:15.712138",
+    "type": "test_strength.updated",
+    "data": {
+      "test_strength": 1.0,
+      "caught": 11,
+      "survived": 0,
+      "timeout": 0,
+      "total": 11
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 25,
+    "ts": "2026-09-30T15:39:15.722102",
+    "type": "stage.completed",
+    "data": {
+      "stage": 3,
+      "name": "Plant bugs to test the tests",
+      "summary": "Completed Plant bugs to test the tests",
+      "elapsed_seconds": 0.51
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 26,
+    "ts": "2026-09-30T15:39:15.731975",
+    "type": "stage.started",
+    "data": {
+      "stage": 4,
+      "name": "Try refactors"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 27,
+    "ts": "2026-09-30T15:39:15.738001",
+    "type": "candidate.started",
+    "data": {
+      "candidate_id": "cand-cons",
+      "strategy": "conservative",
+      "model_tier": "nano"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 28,
+    "ts": "2026-09-30T15:39:15.850325",
+    "type": "candidate.iteration",
+    "data": {
+      "candidate_id": "cand-cons",
+      "iteration": 1,
+      "tests_passed": 10,
+      "tests_failed": 0,
+      "action": "Added type hints and preserved exact rounding behavior"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 29,
+    "ts": "2026-09-30T15:39:15.856523",
+    "type": "candidate.result",
+    "data": {
+      "candidate_id": "cand-cons",
+      "strategy": "conservative",
+      "status": "green",
+      "iterations": 1,
+      "tests_passed": 10,
+      "tests_total": 10,
+      "summary": "Preserved all numerical rounding characteristics while adding type signatures."
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 30,
+    "ts": "2026-09-30T15:39:15.862865",
+    "type": "candidate.started",
+    "data": {
+      "candidate_id": "cand-bal",
+      "strategy": "balanced",
+      "model_tier": "super"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 31,
+    "ts": "2026-09-30T15:39:15.972673",
+    "type": "candidate.iteration",
+    "data": {
+      "candidate_id": "cand-bal",
+      "iteration": 1,
+      "tests_passed": 9,
+      "tests_failed": 1,
+      "action": "Unified rounding logic using standard round()"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 32,
+    "ts": "2026-09-30T15:39:15.992220",
+    "type": "candidate.result",
+    "data": {
+      "candidate_id": "cand-bal",
+      "strategy": "balanced",
+      "status": "green",
+      "iterations": 2,
+      "tests_passed": 10,
+      "tests_total": 10,
+      "summary": "Refactored rounding functions to standard Python round()."
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 33,
+    "ts": "2026-09-30T15:39:16.002784",
+    "type": "stage.completed",
+    "data": {
+      "stage": 4,
+      "name": "Try refactors",
+      "summary": "Completed Try refactors",
+      "elapsed_seconds": 0.26
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 34,
+    "ts": "2026-09-30T15:39:16.014609",
+    "type": "stage.started",
+    "data": {
+      "stage": 5,
+      "name": "Compare with the original"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 35,
+    "ts": "2026-09-30T15:39:16.026682",
+    "type": "probe.result",
+    "data": {
+      "candidate_id": "cand-cons",
+      "total_probes": 50,
+      "matching": 50,
+      "divergent": 0,
+      "excluded": 0,
+      "first_divergence": null
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 36,
+    "ts": "2026-09-30T15:39:16.142932",
+    "type": "probe.result",
+    "data": {
+      "candidate_id": "cand-bal",
+      "total_probes": 50,
+      "matching": 45,
+      "divergent": 5,
+      "excluded": 0,
+      "first_divergence": {
+        "input": "top_errors(logs, limit=3)",
+        "expected": "[err_1, err_2] (chronological tie-breaking)",
+        "actual": "[err_2, err_1] (dict comprehension lost insertion order)"
+      }
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 37,
+    "ts": "2026-09-30T15:39:16.155580",
+    "type": "verdict",
+    "data": {
+      "outcome": "holds",
+      "winner_id": "cand-cons",
+      "winner_strategy": "conservative",
+      "sentence": "Candidate A (Conservative) held true on all behavior tests and 50/50 differential probes. Candidate B changed message deduplication order on 5 inputs due to dict insertion and unstable tie-breaking.",
+      "test_strength": 0.92,
+      "behavior_tests_total": 14,
+      "behavior_tests_passed": 14,
+      "planted_bugs_total": 20,
+      "planted_bugs_caught": 18,
+      "probes_total": 50,
+      "probes_matching": 50,
+      "api_surface_changed": false,
+      "complexity_before": null,
+      "complexity_after": null,
+      "lines_before": 240,
+      "lines_after": 244
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 38,
+    "ts": "2026-09-30T15:39:16.167773",
+    "type": "stage.completed",
+    "data": {
+      "stage": 5,
+      "name": "Compare with the original",
+      "summary": "Completed Compare with the original",
+      "elapsed_seconds": 0.14
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 39,
+    "ts": "2026-09-30T15:39:16.178339",
+    "type": "stage.started",
+    "data": {
+      "stage": 6,
+      "name": "Write the dossier"
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 40,
+    "ts": "2026-09-30T15:39:16.233259",
+    "type": "dossier.ready",
+    "data": {
+      "artifacts": [
+        "dossier.md",
+        "refactor.patch",
+        "evidence.json",
+        "pins.zip"
+      ]
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 41,
+    "ts": "2026-09-30T15:39:16.244082",
+    "type": "stage.completed",
+    "data": {
+      "stage": 6,
+      "name": "Write the dossier",
+      "summary": "Completed Write the dossier",
+      "elapsed_seconds": 0.06
+    }
+  },
+  {
+    "v": 1,
+    "run_id": "rec-log_digester-82ed3a08",
+    "seq": 42,
+    "ts": "2026-09-30T15:39:16.249554",
+    "type": "run.completed",
+    "data": {
+      "duration_seconds": 1.12,
+      "verdict": "holds",
+      "winner_id": "cand-cons"
+    }
+  }
+]

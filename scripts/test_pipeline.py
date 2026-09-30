@@ -84,7 +84,7 @@ async def main():
                 if div > 0 and env.data.get("first_divergence"):
                     print(f"     [!] TRAP DETECTED: {env.data.get('first_divergence')}")
             elif t == "verdict":
-                print(f"\n>>> VERDICT: {env.data.get('outcome').upper()}")
+                print(f"\n>>> VERDICT: {str(env.data.get('outcome', '')).upper()}")
                 print(f"    {env.data.get('sentence')}")
             elif t == "dossier.ready":
                 print(f"\n[Dossier Ready] Artifacts: {env.data.get('artifacts')}")

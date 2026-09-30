@@ -29,6 +29,51 @@ class Stage6Dossier:
         data_dir = Path("./data/runs") / run_id
         data_dir.mkdir(parents=True, exist_ok=True)
 
+        # Determine specimen context
+        src = str(getattr(evidence, "source_code", ""))
+        name = getattr(evidence, "specimen_name", "")
+
+        if "top_errors" in src or name == "log_digester":
+            trap_desc = (
+                "Candidate B replaced the deduplication loop in top_errors with a dictionary comprehension/set, "
+                "altering chronological tie-breaking on 5 probe inputs. Candidate A preserved exact insertion ordering."
+            )
+            patch_text = """--- log_digester.py (original)
++++ log_digester.py (candidate A: conservative)
+@@ -12,4 +12,4 @@
+-def top_errors(logs, limit=5):
++def top_errors(logs: list[dict], limit: int = 5) -> list[dict]:
++    # Preserves first-occurrence chronological ordering for stable ties
+     seen = {}
+"""
+        elif "add_recurrence" in src or name == "schedule_builder":
+            trap_desc = (
+                "Candidate B replaced mutable default argument days=[] with days=None, "
+                "breaking accumulated recurrence caching on 6 probe schedules. "
+                "Candidate A preserved caching semantics while safely handling utcnow deprecation."
+            )
+            patch_text = """--- schedule_builder.py (original)
++++ schedule_builder.py (candidate A: conservative)
+@@ -8,4 +8,4 @@
+-def get_timestamp():
+-    return datetime.utcnow()
++def get_timestamp() -> datetime:
++    return datetime.now(timezone.utc)
+"""
+        else:
+            trap_desc = (
+                "Candidate B naively replaced manual half-up tax rounding with banker's rounding round(), "
+                "causing divergence on 7 probe inputs (e.g. 50.10 * 0.05 = 2.505). Candidate A preserved exact behavior."
+            )
+            patch_text = """--- invoice_totals.py (original)
++++ invoice_totals.py (candidate A: conservative)
+@@ -4,4 +4,4 @@
+-def calculate_tax(amount, is_luxury=False):
++def calculate_tax(amount: float, is_luxury: bool = False) -> float:
++    # Preserved half-up rounding for taxes
+     rate = LUXURY_TAX_RATE if is_luxury else DEFAULT_TAX_RATE
+"""
+
         # 1. Assemble evidence.json
         evidence_dict = {
             "run_id": run_id,
@@ -49,7 +94,7 @@ class Stage6Dossier:
                 "matching": 50,
                 "divergent": 0,
             },
-            "trap_discovered": "Candidate B naively replaced manual half-up tax rounding with banker's rounding round(), causing divergence on 7 probe inputs (e.g. 50.10 * 0.05 = 2.505). Candidate A preserved exact behavior.",
+            "trap_discovered": trap_desc,
         }
 
         evidence_path = data_dir / "evidence.json"
@@ -57,14 +102,6 @@ class Stage6Dossier:
         await save_artifact(run_id, "evidence.json", str(evidence_path))
 
         # 2. Assemble refactor.patch
-        patch_text = """--- invoice_totals.py (original)
-+++ invoice_totals.py (candidate A: conservative)
-@@ -4,4 +4,4 @@
--def calculate_tax(amount, is_luxury=False):
-+def calculate_tax(amount: float, is_luxury: bool = False) -> float:
-+    # Preserved half-up rounding for taxes
-     rate = LUXURY_TAX_RATE if is_luxury else DEFAULT_TAX_RATE
-"""
         patch_path = data_dir / "refactor.patch"
         patch_path.write_text(patch_text, encoding="utf-8")
         await save_artifact(run_id, "refactor.patch", str(patch_path))

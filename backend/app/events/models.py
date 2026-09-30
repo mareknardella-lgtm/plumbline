@@ -6,7 +6,7 @@ TypeScript types are generated from these via scripts/gen_types.py.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any, Literal
 
@@ -23,7 +23,7 @@ class EventEnvelope(BaseModel):
     v: Literal[1] = 1
     run_id: str
     seq: int
-    ts: datetime = Field(default_factory=datetime.utcnow)
+    ts: datetime = Field(default_factory=lambda: datetime.now(UTC))
     type: str
     data: dict[str, Any] = Field(default_factory=dict)
 

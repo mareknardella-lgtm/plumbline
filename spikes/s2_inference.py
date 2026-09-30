@@ -1,6 +1,7 @@
 import asyncio
 import os
 import time
+from typing import Any, cast
 
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
@@ -56,7 +57,7 @@ async def main():
         resp2 = await client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": "What is 123 * 456?"}],
-            tools=tools,
+            tools=cast("Any", tools),
             max_tokens=500,
         )
         print("Tool calls:")

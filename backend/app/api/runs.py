@@ -75,6 +75,7 @@ async def create_new_run(req: CreateRunRequest, request: Request):
             source_code=source_code,
             goal=req.goal or "Modernize and preserve behavior",
             mode=req.mode,
+            specimen_name=req.specimen_name or "invoice_totals",
         )
     )
 

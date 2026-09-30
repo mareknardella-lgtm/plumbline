@@ -25,6 +25,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Evidence:
+    specimen_name: str = "invoice_totals"
+    source_code: str = ""
     survey: SurveyReport | None = None
     pins: PinsResult | None = None
     mutations: MutationResult | None = None
@@ -44,8 +46,17 @@ class PipelineOrchestrator:
     def cancel(self):
         self._cancel_flag = True
 
-    async def run(self, run_id: str, source_code: str, goal: str, mode: str = "quick"):
-        logger.info(f"Starting pipeline orchestrator for run {run_id} in {mode} mode")
+    async def run(
+        self,
+        run_id: str,
+        source_code: str,
+        goal: str,
+        mode: str = "quick",
+        specimen_name: str = "invoice_totals",
+    ):
+        logger.info(
+            f"Starting pipeline orchestrator for run {run_id} ({specimen_name}) in {mode} mode"
+        )
         await update_run_status(run_id, "running")
 
         await self.event_bus.emit(
@@ -54,12 +65,12 @@ class PipelineOrchestrator:
             RunStartedData(
                 mode="quick" if mode == "quick" else "thorough",
                 source_type="specimen",
-                specimen_name="invoice_totals",
+                specimen_name=specimen_name,
                 goal=goal,
             ),
         )
 
-        evidence = Evidence()
+        evidence = Evidence(specimen_name=specimen_name, source_code=source_code)
         stages = [
             (
                 1,

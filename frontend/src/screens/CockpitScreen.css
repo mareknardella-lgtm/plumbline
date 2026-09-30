@@ -46,6 +46,17 @@
   border: 1px solid var(--rule);
 }
 
+.elapsed-badge {
+  font-family: var(--font-code);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-2);
+  background: var(--sheet);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--rule);
+}
+
 .cockpit-actions {
   display: flex;
   gap: 8px;

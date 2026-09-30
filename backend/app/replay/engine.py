@@ -2,10 +2,14 @@
 
 import asyncio
 import json
+import re
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
 from backend.app.events.models import EventEnvelope
+
+# Replay ids become filenames, so keep them to a conservative character set.
+REPLAY_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
 class ReplayEngine:
@@ -50,11 +54,30 @@ class ReplayEngine:
                 )
         return replays
 
+    def replay_path(self, replay_id: str) -> Path:
+        """Resolve a replay file, rejecting ids that escape the replays directory."""
+        if not REPLAY_ID_RE.match(replay_id):
+            raise ValueError(f"Invalid replay id: {replay_id!r}")
+        file_path = (self.replays_dir / f"{replay_id}.jsonl").resolve()
+        if file_path.parent != self.replays_dir.resolve():
+            raise ValueError(f"Replay id escapes the replays directory: {replay_id!r}")
+        return file_path
+
+    def has_replay(self, replay_id: str) -> bool:
+        """Whether a replay exists and its id is safe to stream."""
+        try:
+            return self.replay_path(replay_id).is_file()
+        except ValueError:
+            return False
+
     async def stream_replay(
         self, replay_id: str, speed: float = 1.0
     ) -> AsyncGenerator[EventEnvelope, None]:
-        file_path = self.replays_dir / f"{replay_id}.jsonl"
-        if not file_path.exists():
+        try:
+            file_path = self.replay_path(replay_id)
+        except ValueError as exc:
+            raise FileNotFoundError(str(exc)) from exc
+        if not file_path.is_file():
             raise FileNotFoundError(f"Replay {replay_id} not found")
 
         last_ts = None

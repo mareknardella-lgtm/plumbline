@@ -5,8 +5,8 @@
   --ink: #1B2127;
   --ink-2: #46515C;
   --ink-3: #59636E;
-  --rule: #788898;
-  --rule-strong: #506070;
+  --rule: #CBD5E1;
+  --rule-strong: #94A3B8;
   --plumb: #2350C8;
   --holds: #0F6B4F;
   --drift: #A8281A;
@@ -15,6 +15,21 @@
   --holds-tint: #D8EFE6;
   --drift-tint: #F7DDD8;
   --caution-tint: #F3E6C4;
+
+  /* Brand Accents */
+  --brand-nebius: #7C3AED;
+  --brand-nebius-tint: #EDE9FE;
+  --brand-nvidia: #10B981;
+  --brand-nvidia-tint: #D1FAE5;
+
+  /* Glows & Gradients */
+  --glow-plumb: 0 0 20px rgba(35, 80, 200, 0.25);
+  --glow-holds: 0 0 20px rgba(15, 107, 79, 0.25);
+  --glow-drift: 0 0 20px rgba(168, 40, 26, 0.25);
+  --glass-panel: rgba(250, 251, 251, 0.85);
+  --glass-border: rgba(120, 136, 152, 0.2);
+  --gradient-brand: linear-gradient(135deg, #2350C8 0%, #7C3AED 50%, #10B981 100%);
+  --gradient-subtle: linear-gradient(180deg, rgba(35, 80, 200, 0.04) 0%, transparent 100%);
 
   /* Typography */
   --font-ui: 'Archivo', system-ui, -apple-system, sans-serif;
@@ -40,50 +55,86 @@
   --space-8: 72px;
 
   /* Radii */
-  --radius-control: 6px;
-  --radius-panel: 10px;
-  --radius-code: 4px;
+  --radius-control: 8px;
+  --radius-panel: 14px;
+  --radius-code: 6px;
   --radius-pill: 9999px;
 
   /* Shadows */
-  --shadow-popover: 0 8px 24px rgb(27 33 39 / 0.14);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-popover: 0 12px 36px rgba(27, 33, 39, 0.14);
 }
 
 /* Dark theme "Lamplight" */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sheet: #171E26;
-    --panel: #1D2630;
-    --ink: #E7ECF0;
-    --ink-2: #B6C0CA;
-    --ink-3: #97A3AF;
-    --rule: #607080;
-    --rule-strong: #8898A8;
-    --plumb: #86A8FF;
-    --holds: #63D3A9;
-    --drift: #FF9082;
-    --caution: #E5B44E;
-    --plumb-tint: rgba(35, 80, 200, 0.2);
-    --holds-tint: rgba(15, 107, 79, 0.2);
-    --drift-tint: rgba(185, 58, 43, 0.2);
-    --caution-tint: rgba(138, 95, 0, 0.2);
+    --sheet: #0F141C;
+    --panel: #161D27;
+    --ink: #F1F5F9;
+    --ink-2: #CBD5E1;
+    --ink-3: #94A3B8;
+    --rule: #263342;
+    --rule-strong: #405266;
+    --plumb: #60A5FA;
+    --holds: #34D399;
+    --drift: #F87171;
+    --caution: #FBBF24;
+    --plumb-tint: rgba(96, 165, 250, 0.15);
+    --holds-tint: rgba(52, 211, 153, 0.15);
+    --drift-tint: rgba(248, 113, 113, 0.15);
+    --caution-tint: rgba(251, 191, 36, 0.15);
+
+    --brand-nebius: #A78BFA;
+    --brand-nebius-tint: rgba(167, 139, 250, 0.15);
+    --brand-nvidia: #34D399;
+    --brand-nvidia-tint: rgba(52, 211, 153, 0.15);
+
+    --glow-plumb: 0 0 24px rgba(96, 165, 250, 0.3);
+    --glow-holds: 0 0 24px rgba(52, 211, 153, 0.3);
+    --glow-drift: 0 0 24px rgba(248, 113, 113, 0.3);
+    --glass-panel: rgba(22, 29, 39, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --gradient-brand: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #34D399 100%);
+    --gradient-subtle: linear-gradient(180deg, rgba(96, 165, 250, 0.08) 0%, transparent 100%);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+    --shadow-popover: 0 16px 44px rgba(0, 0, 0, 0.5);
   }
 }
 
 [data-theme="dark"] {
-  --sheet: #171E26;
-  --panel: #1D2630;
-  --ink: #E7ECF0;
-  --ink-2: #B6C0CA;
-  --ink-3: #97A3AF;
-  --rule: #607080;
-  --rule-strong: #8898A8;
-  --plumb: #86A8FF;
-  --holds: #63D3A9;
-  --drift: #FF9082;
-  --caution: #E5B44E;
-  --plumb-tint: rgba(35, 80, 200, 0.2);
-  --holds-tint: rgba(15, 107, 79, 0.2);
-  --drift-tint: rgba(185, 58, 43, 0.2);
-  --caution-tint: rgba(138, 95, 0, 0.2);
+  --sheet: #0F141C;
+  --panel: #161D27;
+  --ink: #F1F5F9;
+  --ink-2: #CBD5E1;
+  --ink-3: #94A3B8;
+  --rule: #263342;
+  --rule-strong: #405266;
+  --plumb: #60A5FA;
+  --holds: #34D399;
+  --drift: #F87171;
+  --caution: #FBBF24;
+  --plumb-tint: rgba(96, 165, 250, 0.15);
+  --holds-tint: rgba(52, 211, 153, 0.15);
+  --drift-tint: rgba(248, 113, 113, 0.15);
+  --caution-tint: rgba(251, 191, 36, 0.15);
+
+  --brand-nebius: #A78BFA;
+  --brand-nebius-tint: rgba(167, 139, 250, 0.15);
+  --brand-nvidia: #34D399;
+  --brand-nvidia-tint: rgba(52, 211, 153, 0.15);
+
+  --glow-plumb: 0 0 24px rgba(96, 165, 250, 0.3);
+  --glow-holds: 0 0 24px rgba(52, 211, 153, 0.3);
+  --glow-drift: 0 0 24px rgba(248, 113, 113, 0.3);
+  --glass-panel: rgba(22, 29, 39, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --gradient-brand: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #34D399 100%);
+  --gradient-subtle: linear-gradient(180deg, rgba(96, 165, 250, 0.08) 0%, transparent 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-popover: 0 16px 44px rgba(0, 0, 0, 0.5);
 }

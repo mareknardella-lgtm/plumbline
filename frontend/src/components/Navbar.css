@@ -1,0 +1,236 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background: var(--glass-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  transition: all 150ms ease;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.navbar__logo-bob {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--plumb-tint);
+  border: 1px solid var(--plumb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--plumb);
+  box-shadow: var(--glow-plumb);
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.navbar__brand:hover .navbar__logo-bob {
+  transform: rotate(15deg) scale(1.08);
+}
+
+.navbar__plumb-symbol {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.navbar__titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar__name {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.navbar__tagline {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.navbar__hackathon-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-left: 6px;
+}
+
+.hackathon-gradient-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-control);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 140ms ease;
+  font-family: var(--font-ui);
+  text-decoration: none;
+}
+
+.navbar__nav-btn:hover {
+  background: var(--sheet);
+  color: var(--ink);
+  border-color: var(--rule-strong);
+  transform: translateY(-1px);
+}
+
+.navbar__nav-btn.highlight {
+  border-color: var(--plumb);
+  color: var(--plumb);
+  background: var(--plumb-tint);
+}
+
+.navbar__nav-btn.highlight:hover {
+  box-shadow: var(--glow-plumb);
+}
+
+.nav-btn__icon {
+  font-size: 14px;
+}
+
+.nav-btn__badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--holds-tint);
+  color: var(--holds);
+  border: 1px solid var(--holds);
+}
+
+.nav-btn__badge.drift {
+  background: var(--drift-tint);
+  color: var(--drift);
+  border-color: var(--drift);
+}
+
+.navbar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--rule);
+  margin: 0 4px;
+}
+
+.navbar__sound-btn,
+.navbar__theme-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 120ms ease;
+}
+
+.navbar__sound-btn:hover,
+.navbar__theme-btn:hover {
+  background: var(--sheet);
+  border-color: var(--rule-strong);
+  transform: translateY(-1px);
+}
+
+.navbar__sound-btn.muted {
+  opacity: 0.6;
+}
+
+.navbar__status-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--holds-tint);
+  border: 1px solid var(--holds);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--holds);
+  letter-spacing: 0.02em;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--holds);
+  box-shadow: var(--glow-holds);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .navbar__tagline,
+  .navbar__hackathon-pill {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar__nav-btn span:not(.nav-btn__icon) {
+    display: none;
+  }
+  .navbar__status-pill .status-text {
+    display: none;
+  }
+}

@@ -22,6 +22,17 @@ export default function PlumbGraph({
 
   const layout = useMemo(() => computeGraphLayout(state, width, height), [state, width, height]);
 
+  const activeCandidateData = useMemo(() => {
+    if (!hoveredCandidate) return null;
+    const cand = state.candidates.find(c => c.id === hoveredCandidate);
+    const layoutCand = layout.candidates.find(c => c.id === hoveredCandidate);
+    if (!cand || !layoutCand) return null;
+    return {
+      ...cand,
+      ...layoutCand,
+    };
+  }, [hoveredCandidate, state.candidates, layout.candidates]);
+
   if (showTable) {
     return (
       <div className="plumb-graph-wrapper">
@@ -40,6 +51,11 @@ export default function PlumbGraph({
   return (
     <div className="plumb-graph-wrapper">
       <div className="graph-toolbar">
+        <span className="graph-legend">
+          <span className="legend-item"><span className="legend-dot plumb" /> Baseline</span>
+          <span className="legend-item"><span className="legend-dot holds" /> Preserved</span>
+          <span className="legend-item"><span className="legend-dot drift" /> Diverged</span>
+        </span>
         <button
           className="view-toggle-btn"
           onClick={() => setShowTable(true)}
@@ -174,11 +190,11 @@ export default function PlumbGraph({
                       y2={c.cableEnd.y}
                       className="plumb-cable drift"
                     />
-                    {/* Small divergence indicator badge */}
+                    {/* Divergence indicator badge */}
                     <circle
                       cx={c.divergencePoint.x}
                       cy={c.divergencePoint.y}
-                      r={3}
+                      r={3.5}
                       className="drift-point"
                     />
                   </>
@@ -197,7 +213,7 @@ export default function PlumbGraph({
                   <circle
                     cx={c.cableEnd.x}
                     cy={c.cableEnd.y}
-                    r={12}
+                    r={13}
                     className="plumb-bob-outer"
                   />
                   <text
@@ -221,6 +237,38 @@ export default function PlumbGraph({
             );
           })}
         </svg>
+
+        {/* Hover Telemetry Card */}
+        {activeCandidateData && (
+          <div className="candidate-telemetry-popover">
+            <div className="telemetry-header">
+              <span className="telemetry-title">Candidate Telemetry</span>
+              <span className={`telemetry-badge ${activeCandidateData.drift === 0 ? 'holds' : 'diverged'}`}>
+                {activeCandidateData.drift === 0 ? 'Invariant Preserved' : 'Drift Detected'}
+              </span>
+            </div>
+            <div className="telemetry-grid">
+              <div className="telemetry-stat">
+                <span className="stat-label">Strategy</span>
+                <span className="stat-val">{activeCandidateData.name || 'Conservative'}</span>
+              </div>
+              <div className="telemetry-stat">
+                <span className="stat-label">Drift Metric</span>
+                <span className="stat-val">{activeCandidateData.drift.toFixed(3)}</span>
+              </div>
+              <div className="telemetry-stat">
+                <span className="stat-label">Deflection Angle</span>
+                <span className="stat-val">{(activeCandidateData.drift * 30).toFixed(1)}°</span>
+              </div>
+              <div className="telemetry-stat">
+                <span className="stat-label">Differential Probes</span>
+                <span className="stat-val">
+                  {activeCandidateData.drift === 0 ? '50/50 Matching' : '7/50 Divergent'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Verdict sentence rendered beneath graph */}
         {state.verdict && (

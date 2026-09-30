@@ -7,7 +7,13 @@ import PlumbGraph from '../graph/PlumbGraph';
 import Button from '../components/Button';
 import TestStrengthMeter from '../components/TestStrengthMeter';
 import DiffViewer from '../components/DiffViewer';
+import Navbar from '../components/Navbar';
+import ArchitectureDrawer from '../components/ArchitectureDrawer';
+import BenchmarksModal from '../components/BenchmarksModal';
+import AIVsPlumblineModal from '../components/AIVsPlumblineModal';
+import TrapPlaygroundModal from '../components/TrapPlaygroundModal';
 import { cancelRun } from '../lib/api';
+import { playTick, playSuccessChime, playDivergenceWarning } from '../lib/sound';
 
 interface CockpitScreenProps {
   runId: string;
@@ -16,13 +22,48 @@ interface CockpitScreenProps {
 export default function CockpitScreen({ runId }: CockpitScreenProps) {
   const { state, error, totalEvents, scrubIndex, setScrubIndex } = useRunStream(runId);
   const [activeTab, setActiveTab] = useState<'log' | 'ledger' | 'tests' | 'code'>('log');
-  const logsEndRef = useRef<HTMLDivElement>(null);
+  const [isArchOpen, setIsArchOpen] = useState(false);
+  const [isBenchOpen, setIsBenchOpen] = useState(false);
+  const [isAiStudyOpen, setIsAiStudyOpen] = useState(false);
+  const [isTrapPlaygroundOpen, setIsTrapPlaygroundOpen] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
+  const logsEndRef = useRef<HTMLDivElement>(null);
+  const prevMutantsCountRef = useRef(0);
+  const prevVerdictRef = useRef<string | null>(null);
+
+  // Auto-scroll logs
   useEffect(() => {
     if (scrubIndex === null) {
       logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [state.logs, scrubIndex]);
+
+  // Elapsed timer when running
+  useEffect(() => {
+    if (state.status === 'running') {
+      const interval = setInterval(() => {
+        setElapsedSeconds(prev => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [state.status]);
+
+  // Sound triggers
+  useEffect(() => {
+    if (state.mutants.length > prevMutantsCountRef.current) {
+      playTick();
+      prevMutantsCountRef.current = state.mutants.length;
+    }
+    if (state.verdict && state.verdict !== prevVerdictRef.current) {
+      if (state.verdict === 'held') {
+        playSuccessChime();
+      } else if (state.verdict === 'dropped') {
+        playDivergenceWarning();
+      }
+      prevVerdictRef.current = state.verdict;
+    }
+  }, [state.mutants.length, state.verdict]);
 
   const handleCancel = async () => {
     try {
@@ -73,15 +114,25 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
 
   return (
     <div className="cockpit-screen">
+      <Navbar
+        onOpenArch={() => setIsArchOpen(true)}
+        onOpenBench={() => setIsBenchOpen(true)}
+        onOpenAiStudy={() => setIsAiStudyOpen(true)}
+        onOpenTrapPlayground={() => setIsTrapPlaygroundOpen(true)}
+      />
+
       <header className="cockpit-header">
         <div className="header-left">
           <button className="back-link" onClick={() => (window.location.hash = '#/')}>
-            ← Back
+            ← Back to Home
           </button>
           <div className="cockpit-title">
             Run: <code>{runId.slice(0, 12)}...</code>
           </div>
           <StatusPill status={state.status as any} label={state.status} />
+          {elapsedSeconds > 0 && (
+            <span className="elapsed-badge">⏱ {elapsedSeconds}s</span>
+          )}
         </div>
         <div className="cockpit-actions">
           {state.status === 'completed' ? (
@@ -89,7 +140,7 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
               variant="primary"
               onClick={() => (window.location.hash = `#/dossier/${runId}`)}
             >
-              View Dossier →
+              View Verification Dossier →
             </Button>
           ) : state.status === 'running' ? (
             <Button variant="quiet" onClick={handleCancel}>
@@ -101,7 +152,7 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
 
       <div className="cockpit-body">
         <aside className="cockpit-rail">
-          <div className="rail-heading">Stages</div>
+          <div className="rail-heading">Verification Pipeline</div>
           {stages.map(s => (
             <StageRow
               key={s.num}
@@ -113,7 +164,7 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
 
           {state.mutants.length > 0 && (
             <div className="strength-widget">
-              <div className="widget-label">Test strength (planted bugs)</div>
+              <div className="widget-label">AST Tripwire Strength</div>
               <TestStrengthMeter caught={caught} survived={survived} timeout={timeout} />
               <div className="strength-sub">
                 {caught} caught, {survived} survived
@@ -126,7 +177,7 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
           <div className="graph-card">
             <div className="graph-title">Plumb Graph</div>
             <p className="graph-sub">
-              Vertical baseline represents true behavior. Deviation indicates behavioral drift.
+              Vertical baseline represents true behavior. Lateral cable deflection reveals exact behavioral drift.
             </p>
             <PlumbGraph state={state} width={600} height={420} />
 
@@ -168,27 +219,27 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
           <div className="panel-tab-bar">
             <button
               className={`panel-tab-btn ${activeTab === 'log' ? 'active' : ''}`}
-              onClick={() => setActiveTab('log')}
+              onClick={() => { setActiveTab('log'); playTick(); }}
             >
               Log ({state.logs.length})
             </button>
             <button
               className={`panel-tab-btn ${activeTab === 'ledger' ? 'active' : ''}`}
-              onClick={() => setActiveTab('ledger')}
+              onClick={() => { setActiveTab('ledger'); playTick(); }}
             >
               Ledger ({state.ledger.length})
             </button>
             <button
               className={`panel-tab-btn ${activeTab === 'tests' ? 'active' : ''}`}
-              onClick={() => setActiveTab('tests')}
+              onClick={() => { setActiveTab('tests'); playTick(); }}
             >
               Tests
             </button>
             <button
               className={`panel-tab-btn ${activeTab === 'code' ? 'active' : ''}`}
-              onClick={() => setActiveTab('code')}
+              onClick={() => { setActiveTab('code'); playTick(); }}
             >
-              Code
+              Code Diff
             </button>
           </div>
 
@@ -244,8 +295,8 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
             {activeTab === 'tests' && (
               <div className="tests-container">
                 <div className="tests-summary">
-                  <h4>Behavior Test Pins</h4>
-                  <p>Pins freeze existing observable behavior before candidate refactors run.</p>
+                  <h4>Hermetic Characterization Pins</h4>
+                  <p>Frozen observable behavior before candidate refactors run.</p>
                 </div>
                 <div className="tests-list">
                   <div className="test-item-row passed">
@@ -275,8 +326,8 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
             {activeTab === 'code' && (
               <div className="code-container">
                 <div className="code-summary">
-                  <h4>Candidate Patch & Diff</h4>
-                  <p>Comparing original behavior baseline with candidate refactor.</p>
+                  <h4>Candidate Patch & Behavioral Diff</h4>
+                  <p>Comparing baseline behavior with candidate refactor.</p>
                 </div>
                 <DiffViewer patch={samplePatch} />
               </div>
@@ -284,6 +335,26 @@ export default function CockpitScreen({ runId }: CockpitScreenProps) {
           </div>
         </aside>
       </div>
+
+      <ArchitectureDrawer
+        isOpen={isArchOpen}
+        onClose={() => setIsArchOpen(false)}
+      />
+
+      <BenchmarksModal
+        isOpen={isBenchOpen}
+        onClose={() => setIsBenchOpen(false)}
+      />
+
+      <AIVsPlumblineModal
+        isOpen={isAiStudyOpen}
+        onClose={() => setIsAiStudyOpen(false)}
+      />
+
+      <TrapPlaygroundModal
+        isOpen={isTrapPlaygroundOpen}
+        onClose={() => setIsTrapPlaygroundOpen(false)}
+      />
     </div>
   );
 }

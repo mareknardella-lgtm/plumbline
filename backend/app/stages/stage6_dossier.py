@@ -2,6 +2,7 @@
 
 import json
 import logging
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -10,6 +11,27 @@ from backend.app.events.models import DossierReadyData
 from backend.app.store.db import save_artifact
 
 logger = logging.getLogger(__name__)
+
+# Fixed timestamp so an unchanged run always produces a byte-identical archive.
+_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+
+
+def _zip_entry(name: str) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, date_time=_ZIP_TIMESTAMP)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    return info
+
+
+def _pins_readme(run_id: str, pin_count: int) -> str:
+    return (
+        f"# Characterization pins for run {run_id}\n\n"
+        f"Recorded in stage 2: {pin_count} tests.\n\n"
+        "These pins freeze the *original* runtime behavior. They must pass on a\n"
+        "refactor that preserves behavior and fail on one that does not, which is\n"
+        "exactly what stage 3 measures.\n\n"
+        "Run them against the pinned source with:\n\n"
+        "    pytest test_characterization.py\n"
+    )
 
 
 @dataclass
@@ -158,9 +180,21 @@ Plumbline tested the refactored code against the original implementation through
         pr_description_path.write_text(pr_description_text, encoding="utf-8")
         await save_artifact(run_id, "pr_description.md", str(pr_description_path))
 
-        # 5. Assemble pins.zip placeholder
+        # 5. Assemble pins.zip from the tests actually written in stage 2
+        pins = getattr(evidence, "pins", None)
+        test_code = getattr(pins, "test_code", "") or ""
+        pin_count = int(getattr(pins, "test_count", 0) or 0)
         pins_path = data_dir / "pins.zip"
-        pins_path.write_bytes(b"PK\x05\x06" + b"\x00" * 18)  # Valid empty zip header
+        with zipfile.ZipFile(pins_path, "w", zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr(_zip_entry("README.md"), _pins_readme(run_id, pin_count))
+            if test_code.strip():
+                archive.writestr(_zip_entry("test_characterization.py"), test_code)
+        logger.info(
+            "Wrote pins.zip for run %s with %d pins (%d chars of test code)",
+            run_id,
+            pin_count,
+            len(test_code),
+        )
         await save_artifact(run_id, "pins.zip", str(pins_path))
 
         # Emit dossier.ready event

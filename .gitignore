@@ -43,3 +43,7 @@ Desktop.ini
 
 # Docker
 .docker/
+
+# Temp
+.freebuff/
+

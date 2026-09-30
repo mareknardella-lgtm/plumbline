@@ -131,7 +131,13 @@ Plumbline tested the refactored code against the original implementation through
 
 ---
 
-## 3. What this does not prove
+## 3. Deprecation Radar (Tavily)
+- Monitored deprecated patterns and verified safe replacements with web migration docs (e.g. `datetime.utcnow` -> `datetime.now(timezone.utc)`).
+- Zero deprecated standard library symbols introduced in verified patch.
+
+---
+
+## 4. What this does not prove
 - This does not prove correctness against an external financial specification, only fidelity to the original implementation.
 - This does not prove performance scalability beyond single-threaded Python batch throughput.
 - This does not prove that uncalled private helper functions behave identically under edge-case inputs not present in the original codebase.

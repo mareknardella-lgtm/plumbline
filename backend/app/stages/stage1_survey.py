@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 
 from backend.app.llm.registry import registry
+from backend.app.llm.tavily import TavilySearcher
 from runtime.plumbline_tools.survey import survey_source
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class SurveyReport(BaseModel):
     nondeterminism_sources: list[str] = Field(default_factory=list)
     neutralization_plan: str = ""
     candidate_plans: dict[str, str] = Field(default_factory=dict)
+    deprecations: list[dict] = Field(default_factory=list)
 
 
 class Stage1Survey:
@@ -64,7 +66,20 @@ class Stage1Survey:
             },
         )
 
-        # 2. LLM enhancement if available
+        # 2. Tavily Deprecation Radar (P1 bonus)
+        try:
+            searcher = TavilySearcher()
+            deprecations = await searcher.check_deprecations(source_code)
+            if deprecations:
+                report.deprecations = deprecations
+                for dep in deprecations:
+                    report.risks.append(
+                        f"Deprecated pattern: {dep['symbol']} -> modern replacement: {dep['recommended_replacement']}"
+                    )
+        except Exception as e:
+            logger.warning("Tavily deprecation radar check error: %s", e)
+
+        # 3. LLM enhancement if available
         if self.llm_client:
             try:
                 prompt_path = (

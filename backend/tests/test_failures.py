@@ -12,7 +12,7 @@ Verifies:
 """
 
 import asyncio
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -226,3 +226,39 @@ async def test_llm_client_429_backoff_and_retry():
         )
         assert result.choices[0].message.content == "OK response"
         assert call_count == 3  # Succeeded on 3rd attempt after 2 retries
+
+
+@pytest.mark.asyncio
+async def test_tavily_deprecation_radar():
+    """Verify Tavily deprecation radar identifies deprecated symbols and handles search."""
+    from backend.app.llm.tavily import TavilySearcher
+
+    searcher = TavilySearcher(api_key="")
+    # Disabled without key, returns offline dictionary matches
+    legacy_code = "import datetime\ndef now(): return datetime.utcnow()"
+    deprecations = await searcher.check_deprecations(legacy_code)
+    assert len(deprecations) >= 1
+    assert any("utcnow" in d["symbol"] for d in deprecations)
+    assert any("timezone.utc" in d["recommended_replacement"] for d in deprecations)
+
+    # Test with mock API response
+    with patch("httpx.AsyncClient.post", new_callable=AsyncMock) as mock_post:
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "results": [
+                {
+                    "title": "Python datetime migration",
+                    "url": "https://docs.python.org",
+                    "content": "Use timezone aware datetime objects instead of utcnow().",
+                }
+            ]
+        }
+        mock_post.return_value = mock_resp
+
+        keyed_searcher = TavilySearcher(api_key="tvly-mock-key")
+        deprecations_with_web = await keyed_searcher.check_deprecations(legacy_code)
+        assert len(deprecations_with_web) >= 1
+        utcnow_dep = next(d for d in deprecations_with_web if "utcnow" in d["symbol"])
+        assert utcnow_dep["tavily_guidance"] is not None
+        assert utcnow_dep["tavily_guidance"]["title"] == "Python datetime migration"

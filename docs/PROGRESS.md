@@ -25,7 +25,7 @@
 | R15 | City (if IRL event) | ⬜ | To be provided by user if attended Builders & Brews |
 | R16 | Submission in English | ✅ | All documentation, UI text, and prompts in English |
 | R17 | Original work | ✅ | Built from scratch during hackathon window |
-| R18 | Tavily runtime call (P1) | ⬜ | Optional P1 bonus |
+| R18 | Tavily runtime call (P1) | ✅ | Tavily Deprecation Radar client integrated with live web migration queries |
 | R19 | Official Rules accepted | ⬜ | Human checkpoint (user submits form on Devpost) |
 
 ## Decisions
@@ -73,4 +73,5 @@
 | 2026-09-30 | Phase 6 complete & Gate 6 passed: Complete README.md (16 sections per §14.3), Devpost copy (`DEVPOST.md`), product feedback (`FEEDBACK.md`), 2:45 video storyboard & voiceover script (`VIDEO_SCRIPT.md`), submission checklist (`CHECKLIST.md`). Added Architecture drawer with inline SVG diagram. Captured all 6 submission screenshots at 1440x900 (`scripts/screenshots.py`) and 1200x630 social card (`scripts/og_image.py`). Quality check `scripts/check.py` 100% green. | Phase 7 Human Checkpoint (Devpost submission) |
 | 2026-09-30 | P1 & P2 feature additions: Upgraded DiffViewer with hunk parsing, tabular line numbers, and pin coverage evidence badges. Added in-app Benchmarks modal with live 11.2x fork comparison. Added zip upload tab and recorded run quickstart. Added Bring-Your-Own-Key (BYOK) mode in API. Implemented Model Context Protocol (MCP) server (`scripts/mcp_server.py`) exposing survey, mutate, and verify tools over JSON-RPC 2.0 stdio. Completed automated license audit (`scripts/license_check.py`) and generated `THIRD_PARTY.md` verifying 0 copyleft dependencies. `scripts/check.py` 100% green. | Phase 7 Final Submission (Video & Devpost) |
 | 2026-09-30 | Public repository published: Created and pushed master branch and `v1.0.0` tag to https://github.com/mareknardella-lgtm/plumbline. All 19 project requirements and submission assets verified. | Record 2:45 video demo & submit Devpost form |
+| 2026-09-30 | P1 bonus completed: Implemented Tavily Deprecation Radar (`backend/app/llm/tavily.py`) satisfying R18, scanning legacy code for deprecated symbols and querying live migration recommendations. 8/8 checks 100% green. | Phase 7 Final Submission (Video & Devpost) |
 

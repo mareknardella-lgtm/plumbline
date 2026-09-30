@@ -1,23 +1,206 @@
 .diff-viewer {
-  border: 1px solid var(--border-default);
-  border-radius: 6px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg, #ffffff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.diff-header {
+  padding: 10px 16px;
+  background: var(--bg-subtle, #f8fafc);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.diff-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.diff-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.hunk-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.hunk-badge.exercised {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--plumb, #10b981);
+}
+
+.hunk-badge.unexercised {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+.diff-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-tool-btn {
+  background: none;
+  border: 1px solid var(--border, #cbd5e1);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.diff-tool-btn:hover,
+.diff-tool-btn.active {
+  background: var(--accent-dim, #f1f5f9);
+  color: var(--text, #0f172a);
+  border-color: var(--plumb, #10b981);
+}
+
+.diff-content {
+  font-family: var(--font-code, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  background: var(--bg, #ffffff);
+  overflow-x: auto;
+}
+
+.raw-diff {
+  padding: 16px;
+  margin: 0;
+  white-space: pre;
+}
+
+/* Unified diff view */
+.unified-diff-table {
   display: flex;
   flex-direction: column;
 }
 
-.diff-header {
-  padding: 8px 16px;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-default);
-  display: flex;
-  justify-content: flex-end;
+.diff-hunk {
+  border-bottom: 1px solid var(--border, #e2e8f0);
 }
 
-.diff-content {
-  padding: 16px;
-  font-family: var(--font-code);
-  font-size: 13px;
-  background: var(--bg-default);
-  overflow-x: auto;
+.diff-hunk-header {
+  background: var(--accent-dim, #f1f5f9);
+  padding: 4px 16px;
+  font-size: 11px;
+  color: var(--text-muted, #64748b);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.diff-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 22px;
+  white-space: pre;
+}
+
+.wrap-lines .diff-row {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.line-num {
+  width: 44px;
+  padding: 2px 8px;
+  text-align: right;
+  color: var(--text-muted, #94a3b8);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  background: var(--bg-subtle, #f8fafc);
+  border-right: 1px solid var(--border, #f1f5f9);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.line-prefix {
+  width: 22px;
+  text-align: center;
+  user-select: none;
+  font-weight: 700;
+  flex-shrink: 0;
+  padding: 2px 0;
+}
+
+.line-text {
+  padding: 2px 10px;
+  flex: 1;
+  color: var(--text, #0f172a);
+}
+
+.diff-row-add {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.diff-row-add .line-prefix {
+  color: #059669;
+}
+
+.diff-row-del {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.diff-row-del .line-prefix {
+  color: #dc2626;
+}
+
+.diff-row-context:hover {
+  background: var(--bg-subtle, #f8fafc);
+}
+
+/* Split diff view */
+.split-diff-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.split-row {
+  display: flex;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+}
+
+.split-pane {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+  white-space: pre;
+}
+
+.wrap-lines .split-pane {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.split-left {
+  border-right: 1px solid var(--border, #e2e8f0);
+}
+
+.split-left.del {
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+}
+
+.split-right.add {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
 }

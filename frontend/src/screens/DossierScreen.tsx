@@ -53,6 +53,12 @@ export default function DossierScreen({ runId }: DossierScreenProps) {
     alert('PR description copied to clipboard!');
   };
 
+  const handleCopyPermalink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    alert('Permalink copied to clipboard!');
+  };
+
   if (loading) {
     return <div className="dossier-loading">Loading verification dossier...</div>;
   }
@@ -72,6 +78,9 @@ export default function DossierScreen({ runId }: DossierScreenProps) {
           <div className="verdict-banner">Verdict: <strong>HOLDS TRUE</strong></div>
         </div>
         <div className="actions">
+          <Button variant="quiet" onClick={handleCopyPermalink}>
+            Copy link
+          </Button>
           <Button variant="secondary" onClick={handleCopyPR}>
             Copy PR text
           </Button>

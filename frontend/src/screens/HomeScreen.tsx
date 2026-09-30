@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import Chip from '../components/Chip';
 import SegmentedControl from '../components/SegmentedControl';
 import ArchitectureDrawer from '../components/ArchitectureDrawer';
+import BenchmarksModal from '../components/BenchmarksModal';
 import { createRun } from '../lib/api';
 
 export default function HomeScreen() {
@@ -14,6 +15,7 @@ export default function HomeScreen() {
   const [pasteCode, setPasteCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [isArchOpen, setIsArchOpen] = useState(false);
+  const [isBenchOpen, setIsBenchOpen] = useState(false);
 
   const handleStartRun = async () => {
     setLoading(true);
@@ -79,6 +81,14 @@ export default function HomeScreen() {
           >
             How it works
           </button>
+          <button
+            type="button"
+            className="how-it-works-btn"
+            onClick={() => setIsBenchOpen(true)}
+            aria-label="Open empirical benchmarks and evaluation report"
+          >
+            Benchmarks
+          </button>
           <div className="header-status">
             <span className="status-dot online" />
             <span className="status-label">Live • Token Factory Sandboxes</span>
@@ -109,6 +119,12 @@ export default function HomeScreen() {
             >
               Paste code
             </button>
+            <button
+              className={`tab ${tab === 'upload' ? 'active' : ''}`}
+              onClick={() => setTab('upload')}
+            >
+              Upload zip
+            </button>
           </div>
 
           <div className="start-controls">
@@ -129,7 +145,7 @@ export default function HomeScreen() {
                   ))}
                 </div>
               </div>
-            ) : (
+            ) : tab === 'paste' ? (
               <div className="control-group">
                 <label className="group-label">Paste Python source</label>
                 <textarea
@@ -139,6 +155,35 @@ export default function HomeScreen() {
                   value={pasteCode}
                   onChange={e => setPasteCode(e.target.value)}
                 />
+              </div>
+            ) : (
+              <div className="control-group">
+                <label className="group-label">Upload Python module or archive</label>
+                <div className="upload-box">
+                  <input
+                    type="file"
+                    id="file-upload"
+                    accept=".py,.zip"
+                    className="file-input-hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const text = await file.text();
+                        setPasteCode(text);
+                      }
+                    }}
+                  />
+                  <label htmlFor="file-upload" className="upload-label">
+                    <span className="upload-icon">📁</span>
+                    <span className="upload-prompt">Click to select <code>.py</code> or <code>.zip</code></span>
+                    <span className="upload-hint">Files are processed in isolated Token Factory Sandboxes</span>
+                  </label>
+                  {pasteCode && (
+                    <div className="file-loaded-banner">
+                      ✓ Code loaded ({pasteCode.split('\n').length} lines)
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -173,9 +218,18 @@ export default function HomeScreen() {
                 variant="primary"
                 size="md"
                 onClick={handleStartRun}
-                disabled={loading || (tab === 'paste' && !pasteCode.trim())}
+                disabled={loading || ((tab === 'paste' || tab === 'upload') && !pasteCode.trim())}
               >
                 {loading ? 'Starting run...' : 'Start run'}
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => {
+                  window.location.hash = '#/run/2407642b-b5aa-4bfe-844d-81301c86beaf';
+                }}
+              >
+                Watch a recorded run
               </Button>
               <span className="sandbox-notice">
                 Code runs only in isolated Token Factory Sandboxes.
@@ -188,6 +242,11 @@ export default function HomeScreen() {
       <ArchitectureDrawer
         isOpen={isArchOpen}
         onClose={() => setIsArchOpen(false)}
+      />
+
+      <BenchmarksModal
+        isOpen={isBenchOpen}
+        onClose={() => setIsBenchOpen(false)}
       />
     </div>
   );

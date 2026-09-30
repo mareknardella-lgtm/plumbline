@@ -23,6 +23,7 @@ class CreateRunRequest(BaseModel):
     specimen_name: str | None = None
     goal: str = ""
     mode: str = "quick"
+    api_key: str | None = None
 
 
 @router.post("")
@@ -31,7 +32,9 @@ async def create_new_run(req: CreateRunRequest, request: Request):
     client_ip = request.client.host if request.client else "unknown"
     client_hash = app.state.budget_guard.hash_ip(client_ip)
 
-    app.state.budget_guard.check_rate_limit(client_hash)
+    custom_api_key = req.api_key or request.headers.get("X-Nebius-Api-Key")
+    if not custom_api_key:
+        app.state.budget_guard.check_rate_limit(client_hash)
 
     run_id = str(uuid.uuid4())
     created_at = datetime.now(UTC).isoformat()
@@ -61,10 +64,22 @@ async def create_new_run(req: CreateRunRequest, request: Request):
         client_hash=client_hash,
     )
 
+    # Support Bring-Your-Own-Key (BYOK)
+    llm_client = getattr(app.state, "llm_client", None)
+    if custom_api_key:
+        from backend.app.llm.client import LLMClient
+        from backend.app.settings import get_settings
+
+        settings = get_settings()
+        llm_client = LLMClient(
+            base_url=settings.token_factory_base_url,
+            api_key=custom_api_key,
+        )
+
     # Launch orchestrator pipeline in background
     orchestrator = PipelineOrchestrator(
         event_bus=app.state.event_bus,
-        llm_client=getattr(app.state, "llm_client", None),
+        llm_client=llm_client,
         sandbox=getattr(app.state, "sandbox", None),
         budget_guard=getattr(app.state, "budget_guard", None),
     )

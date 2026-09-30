@@ -181,6 +181,39 @@
   margin-top: 4px;
 }
 
+.group-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.group-hint {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.url-import-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.url-import-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: var(--font-code, monospace);
+  font-size: 12px;
+}
+
+.url-import-input:focus {
+  outline: none;
+  border-color: var(--plumb);
+}
+
 .paste-input {
   width: 100%;
   padding: 12px;

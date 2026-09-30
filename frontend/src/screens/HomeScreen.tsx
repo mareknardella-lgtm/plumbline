@@ -16,6 +16,30 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [isArchOpen, setIsArchOpen] = useState(false);
   const [isBenchOpen, setIsBenchOpen] = useState(false);
+  const [githubUrl, setGithubUrl] = useState('');
+  const [fetchingUrl, setFetchingUrl] = useState(false);
+
+  const handleFetchGithub = async () => {
+    if (!githubUrl.trim()) return;
+    setFetchingUrl(true);
+    try {
+      let url = githubUrl.trim();
+      if (url.includes('github.com') && url.includes('/blob/')) {
+        url = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+      }
+      const res = await fetch(url);
+      if (res.ok) {
+        const text = await res.text();
+        setPasteCode(text);
+      } else {
+        alert('Failed to fetch from URL: ' + res.statusText);
+      }
+    } catch {
+      alert('Error fetching from URL. Ensure the repository is public.');
+    } finally {
+      setFetchingUrl(false);
+    }
+  };
 
   const handleStartRun = async () => {
     setLoading(true);
@@ -147,13 +171,33 @@ export default function HomeScreen() {
               </div>
             ) : tab === 'paste' ? (
               <div className="control-group">
-                <label className="group-label">Paste Python source</label>
+                <div className="group-label-row">
+                  <label className="group-label">Paste Python source</label>
+                  <span className="group-hint">or import from a public GitHub URL</span>
+                </div>
+                <div className="url-import-row">
+                  <input
+                    type="url"
+                    placeholder="https://github.com/user/repo/blob/main/module.py"
+                    className="url-import-input"
+                    value={githubUrl}
+                    onChange={(e) => setGithubUrl(e.target.value)}
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleFetchGithub}
+                    disabled={!githubUrl.trim() || fetchingUrl}
+                  >
+                    {fetchingUrl ? 'Fetching...' : 'Import URL'}
+                  </Button>
+                </div>
                 <textarea
                   className="paste-input"
                   rows={8}
                   placeholder="Paste Python module code here..."
                   value={pasteCode}
-                  onChange={e => setPasteCode(e.target.value)}
+                  onChange={(e) => setPasteCode(e.target.value)}
                 />
               </div>
             ) : (

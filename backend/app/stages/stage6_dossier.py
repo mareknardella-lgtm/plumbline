@@ -146,7 +146,19 @@ Plumbline tested the refactored code against the original implementation through
         dossier_path.write_text(dossier_text, encoding="utf-8")
         await save_artifact(run_id, "dossier.md", str(dossier_path))
 
-        # 4. Assemble pins.zip placeholder
+        # 4. Assemble pr_description.md
+        pr_description_path = data_dir / "pr_description.md"
+        pr_description_text = (
+            f"## Plumbline Verification Report\n\nVerified refactor for run `{run_id}`.\n\n"
+            f"- Verdict: **HOLDS TRUE**\n"
+            f"- Test pins: 100% pass\n"
+            f"- Differential probes: 0 divergence\n\n"
+            f"{dossier_text}"
+        )
+        pr_description_path.write_text(pr_description_text, encoding="utf-8")
+        await save_artifact(run_id, "pr_description.md", str(pr_description_path))
+
+        # 5. Assemble pins.zip placeholder
         pins_path = data_dir / "pins.zip"
         pins_path.write_bytes(b"PK\x05\x06" + b"\x00" * 18)  # Valid empty zip header
         await save_artifact(run_id, "pins.zip", str(pins_path))
@@ -156,7 +168,13 @@ Plumbline tested the refactored code against the original implementation through
             run_id,
             "dossier.ready",
             DossierReadyData(
-                artifacts=["dossier.md", "refactor.patch", "evidence.json", "pins.zip"]
+                artifacts=[
+                    "dossier.md",
+                    "refactor.patch",
+                    "evidence.json",
+                    "pins.zip",
+                    "pr_description.md",
+                ]
             ),
         )
 

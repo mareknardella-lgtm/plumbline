@@ -6,6 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from backend.app.api.events_sse import router as events_router
 from backend.app.api.health import router as health_router
@@ -67,13 +68,19 @@ app.add_middleware(
 )
 
 
-@app.middleware("http")
-async def add_security_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["Content-Security-Policy"] = "default-src 'self'"
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    return response
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; font-src 'self' data:; connect-src 'self' ws:;"
+        )
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        return response
+
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 
 # API routes
@@ -84,6 +91,6 @@ app.include_router(replays_router, prefix="/api/replays", tags=["replays"])
 app.include_router(specimens_router, prefix="/api/specimens", tags=["specimens"])
 
 # Serve frontend static files if they exist
-frontend_dist = Path(__file__).parent.parent.parent.parent / "frontend" / "dist"
+frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 if frontend_dist.exists() and frontend_dist.is_dir():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")

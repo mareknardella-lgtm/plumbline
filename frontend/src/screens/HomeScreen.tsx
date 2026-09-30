@@ -3,6 +3,7 @@ import './HomeScreen.css';
 import Button from '../components/Button';
 import Chip from '../components/Chip';
 import SegmentedControl from '../components/SegmentedControl';
+import ArchitectureDrawer from '../components/ArchitectureDrawer';
 import { createRun } from '../lib/api';
 
 export default function HomeScreen() {
@@ -12,6 +13,7 @@ export default function HomeScreen() {
   const [goal, setGoal] = useState('Modernize to Python 3.12');
   const [pasteCode, setPasteCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isArchOpen, setIsArchOpen] = useState(false);
 
   const handleStartRun = async () => {
     setLoading(true);
@@ -68,9 +70,19 @@ export default function HomeScreen() {
           <span className="logo-mark">⌖</span>
           <span className="logo-text">Plumbline</span>
         </div>
-        <div className="header-status">
-          <span className="status-dot online" />
-          <span className="status-label">Live • Token Factory Sandboxes</span>
+        <div className="header-actions">
+          <button
+            type="button"
+            className="how-it-works-btn"
+            onClick={() => setIsArchOpen(true)}
+            aria-label="Open architecture and system design drawer"
+          >
+            How it works
+          </button>
+          <div className="header-status">
+            <span className="status-dot online" />
+            <span className="status-label">Live • Token Factory Sandboxes</span>
+          </div>
         </div>
       </header>
 
@@ -172,6 +184,11 @@ export default function HomeScreen() {
           </div>
         </section>
       </main>
+
+      <ArchitectureDrawer
+        isOpen={isArchOpen}
+        onClose={() => setIsArchOpen(false)}
+      />
     </div>
   );
 }

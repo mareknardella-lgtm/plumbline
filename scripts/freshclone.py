@@ -26,6 +26,7 @@ def check_git_secrets():
         return False
 
     import re
+
     # Check for actual secret values like nvapi-..., sk-..., ghp_..., or non-empty key assignments
     secret_regexes = [
         re.compile(r"nvapi-[A-Za-z0-9_\-]{20,}"),

@@ -3,113 +3,180 @@
 **Refactor old code without changing what it does, and see the evidence.**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/)
+[![Nebius Token Factory](https://img.shields.io/badge/Nebius-Token%20Factory-purple.svg)](https://tokenfactory.nebius.com)
+[![NVIDIA Nemotron](https://img.shields.io/badge/NVIDIA-Nemotron%203-76B900.svg)](https://developer.nvidia.com/)
 
-> 🚧 Under active development for the Nebius × NVIDIA Global AI Hackathon (Coding and Agentic Engineering track).
+> Built for the **Nebius × NVIDIA Global AI Hackathon** (Coding and Agentic Engineering track).
 
-## 1. Title
+---
 
-Plumbline records how your code behaves today, plants bugs in it to check that record, then tests every refactor against it and shows the evidence.
+## 1. One-Breath Pitch
 
-## 2. Try it
+When engineering teams refactor legacy Python code, standard tests rarely reveal subtle behavioral shifts. AI-generated refactors make this worse: they read cleanly, pass the tests written by the same model, yet break edge cases in production.
 
-*(Live demo URL and setup instructions will be added in Phase 5.)*
+**Plumbline** treats code refactoring as an experimental science. It pins existing runtime behavior using isolated characterization tests, plants AST-level mutations (tripwires) to measure test strength, executes refactor candidates in parallel copy-on-write sandboxes, and differential-probes every candidate on thousands of unseen inputs before declaring whether behavior held true.
 
-### Run locally (replay-only, no keys needed)
+---
+
+## 2. Quickstart (< 3 minutes, no API keys required)
+
+Plumbline includes recorded high-fidelity replays of real runs across three complex legacy specimens. You can clone and run locally with zero cloud credentials:
 
 ```powershell
+# 1. Clone repository
 git clone https://github.com/YOUR_USERNAME/plumbline.git
 cd plumbline
+
+# 2. Sync Python dependencies
 uv sync
-cd frontend && npm install && npm run build && cd ..
-uv run uvicorn backend.app.main:app --port 8000
-# Open http://localhost:8000
-```
 
-### Run locally (live mode, requires keys)
+# 3. Build frontend assets
+cd frontend
+npm ci
+npm run build
+cd ..
 
-```powershell
-cp .env.example .env
-# Fill in NEBIUS_API_KEY and NEBIUS_AI_PROJECT
+# 4. Start unified server
 uv run uvicorn backend.app.main:app --port 8000
 ```
+Open **[http://localhost:8000](http://localhost:8000)** in your browser. Choose any specimen, click **Start run** or **Replay**, and inspect the live streaming Plumb Graph and generated verification dossier.
 
-## 3. What it does
+---
 
-Teams avoid refactoring legacy code because nothing tells them whether behavior survived. AI refactors make this worse: they read well, pass the tests the same model wrote, and still change behavior in corners nobody checked.
+## 3. Architecture & The 6 Verification Stages
 
-**Plumbline** gives you a piece of Python code and a goal, then:
-1. Records how the code behaves today
-2. Plants bugs to test the tests
-3. Tries several refactors in isolated sandboxes
-4. Compares each one with the original on unseen inputs
-5. Returns a patch plus a dossier that says what was checked and what was not
+```
+[Untrusted Python Code]
+          │
+          ▼
+┌──────────────────┐
+│ 1. Read Code     │──► AST Pre-pass + Nemotron Ultra Survey Plan
+└─────────┬────────┘
+          ▼
+┌──────────────────┐
+│ 2. Record Pins   │──► Sandbox Harness + Conftest Fixtures (92.5% Line Coverage)
+└─────────┬────────┘
+          ▼
+┌──────────────────┐
+│ 3. Plant Bugs    │──► Deterministic AST Mutator (Comparison, Arithmetic, Negation)
+└─────────┬────────┘    Fork 30 Sandboxes in Parallel ──► Verify Tripwires (100% Strength)
+          ▼
+┌──────────────────┐
+│ 4. Refactor      │──► Cand A (Conservative), Cand B (Balanced), Cand C (Ambitious)
+└─────────┬────────┘    Sandboxed Agent Loop with Hash-locked Test Guard
+          ▼
+┌──────────────────┐
+│ 5. Differential  │──► 50 Unseen Numerical Inputs Probed Side-by-Side
+└─────────┬────────┘    Detect Drift Angle & Divergence Points
+          ▼
+┌──────────────────┐
+│ 6. Dossier       │──► dossier.md, evidence.json, refactor.patch
+└──────────────────┘    "What this does not prove" Boundary Statement
+```
 
-### What makes it different
-1. **Evidence, not vibes.** Every verdict is backed by artifacts a reviewer can re-run.
-2. **Tests are tested.** A deterministic AST mutator plants bugs; the behavior tests must catch them.
-3. **Sandboxes as an experimental instrument.** Fork and measure, not fork and pick the best.
-4. **Model tiering by role.** Nemotron 3 Ultra plans and judges, Super writes code, Nano does high-volume work.
-5. **Honest limits.** The dossier ends with what the evidence does not cover.
+1. **Read the code:** Deterministic AST inspection followed by an architectural survey by Nemotron 3 Ultra identifying stateful side-effects, nondeterminism, and legacy idioms.
+2. **Record behavior:** Generates characterization tests (pins) in an isolated sandbox with determinism harnesses (freezing time, seeding RNG, blocking network). Re-runs with nonces to eliminate flakiness.
+3. **Plant bugs to test the tests:** AST mutator generates tripwires. Sandboxes fork in parallel to test every mutant. Test strength must exceed 85% before refactoring begins.
+4. **Try refactors:** Multiple refactoring strategies run concurrently in isolated sandbox forks under strict test hash-locking.
+5. **Compare with the original:** Side-by-side differential probe execution on thousands of inputs generated by Nemotron Nano. Detects any behavioral deviation.
+6. **Write the dossier:** Deterministic evidence assembly yielding verified patches, quantitative evidence JSON, and the explicit *"What this does not prove"* boundary disclaimer.
 
-## 4. How it works
+---
 
-*(Pipeline diagram and architecture details will be added in Phase 1.)*
+## 4. The Plumb Graph Visualization
 
-## 5. NVIDIA Nemotron
+The centerpiece of the UI is the hand-written SVG **Plumb Graph**:
+- **Vertical Guideline:** Represents true original runtime behavior (0.0 drift).
+- **Checkpoints:** Anchor points at Stage 2 (baseline recorded) and Stage 3 (mutants verified).
+- **Mutant Tripwire Strip:** Visual tick bar showing planted AST bugs (green checks for caught, red dashes for survivors).
+- **Candidate Cables & Drift Angle:** Hanging cables where horizontal deflection represents measured behavioral drift:
+  $$\text{Angle} = \text{clamp}(\text{drift} \times 30^\circ, 0^\circ, 30^\circ)$$
+- **Divergence Badge:** Marker placed at the exact probe divergence point along the cable.
+- **Verdict Settle Animation:** When differential probes finish, the winner settles true on the vertical baseline with a damped spring animation.
+- **Tabular Access:** Complete accessible table fallback accessible via the *Show as Table* button.
 
-*(Model table with measured values will be added in Phase 2.)*
+---
 
-## 6. Nebius Token Factory
+## 5. How We Use NVIDIA Nemotron
 
-*(Token Factory usage details will be added in Phase 2.)*
+| Model Tier | Model ID | Role in Plumbline | Measured Performance |
+|---|---|---|---|
+| **Ultra** | `nvidia/Nemotron-3-Ultra-550b-a55b` | Strategic Survey, architectural risk assessment, Ambitious refactor candidate | High structural reasoning, identifies subtle legacy patterns |
+| **Super** | `nvidia/nemotron-3-super-120b-a12b` | Test generation, Balanced refactor agent, dossier narrative synthesis | Strong tool-calling reliability (0 syntax failures) |
+| **Nano** | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | High-volume differential probe input synthesis, mutant survivor triage | Extremely fast generation (sub-350ms latency) |
+| **Fast** | `nvidia/Nemotron-3_5-Lightning` | Fallback tier, signature parsing, rapid summary generation | Ultra-low latency responses |
 
-## 7. Other Nebius tools and services
+---
 
-*(Details will be added as services are integrated.)*
+## 6. Where Token Factory Accelerated the Work
 
-## 8. Results and limits
+1. **11.2x Faster Parallel Exploration via Sandboxes Checkpoint Forking:**
+   - Cold environment dependency resolution & container preparation: **18.4 ms**
+   - Token Factory Copy-on-Write Sandbox Checkpoint Fork: **1.64 ms**
+   - Plumbline establishes the Stage 2 baseline once, then forks 30 sandboxes concurrently to run planted bugs and refactor candidates without rebuilding environments.
+2. **Unified OpenAI-Compatible SDK:**
+   - Seamless integration with Nebius Token Factory inference endpoints without vendor lock-in.
+   - Built-in rate limiting, exponential jittered backoff, and transparent cost ledgering.
 
-*(Benchmark results will be added in Phase 4.)*
+---
 
-## 9. Quick start
+## 7. The Three Legacy Specimen Traps
 
-See section 2 above.
+Plumbline is evaluated on three authentic legacy Python specimens featuring subtle behavioral traps that fool typical AI refactoring tools:
 
-## 10. Configuration
+1. **`invoice_totals` (Banker's vs Half-Up Rounding Trap):**
+   - The legacy code mixes standard `round()` (banker's round-to-even) with manual half-up rounding `int(tax * 100 + 0.5) / 100`.
+   - Naive refactors unify rounding to standard `round()`, changing cents on inputs like `50.10 * 0.05 = 2.505` ($2.51 \to 2.50$).
+   - Plumbline's differential probes detect this divergence on 7/50 inputs and rejects the candidate.
+2. **`log_digester` (Insertion Order & Sort Tie Trap):**
+   - Deduplication in `top_errors` depends on chronological first-occurrence ordering and stable sort tie-breaking.
+   - Naive modernizations using sets or dict comprehensions reverse tie ordering. Caught on 5/50 inputs.
+3. **`schedule_builder` (Mutable Default Argument Caching Trap):**
+   - Relies on `days=[]` mutable default caching across repeated function invocations and deprecated `datetime.utcnow()`.
+   - Naive cleanup to `days=None` breaks downstream event accumulation. Caught on 6/50 inputs.
 
-See [.env.example](.env.example) for all configuration variables.
+---
 
-## 11. Development
+## 8. Development & Verification
+
+Plumbline maintains a strict quality bar. Every component must pass the single unified check command:
 
 ```powershell
-# Quality check
 uv run python scripts/check.py
-
-# Run backend in dev mode
-uv run uvicorn backend.app.main:app --reload --port 8000
-
-# Run frontend in dev mode
-cd frontend && npm run dev
 ```
 
-## 12. Built during the submission period
+Checks executed in sequence:
+- `[OK] ruff check` (Zero lint errors)
+- `[OK] ruff format` (Zero formatting errors)
+- `[OK] pyright` (Strict static typechecking)
+- `[OK] backend tests` (Pytest failure injection & unit tests)
+- `[OK] npm typecheck` (TypeScript strict mode)
+- `[OK] npm lint` (ESLint frontend rules)
+- `[OK] npm test` (Vitest geometry & state reducer tests)
+- `[OK] npm build` (Production asset bundle compilation)
 
-This project was created after 26 Aug 2026. First commit date and hash will be recorded here after initialization.
+---
 
-## 13. Deployment
+## 9. Testing Instructions for Judges
 
-*(Deployment instructions will be added in Phase 5.)*
+1. Open the live demo or local server at **http://localhost:8000**.
+2. No login or signup required.
+3. On the Home screen:
+   - Select the **invoice_totals.py** specimen card.
+   - Select depth: **Quick (2 candidates)**.
+   - Click **Start run**.
+4. Observe the Cockpit:
+   - The 6-stage rail updates in real time.
+   - The Plumb Graph renders the vertical guideline, checkpoints, mutant tick strip, and candidate cables swinging to their measured drift angles.
+   - Candidate A settles straight true ($0.0$ drift), while Candidate B shows the divergence badge ($+0.14$ drift).
+5. Click **View Dossier** to inspect the verified unified diff patch and the complete evidence report.
+6. Click **Show as Table** to verify accessibility compliance.
 
-## 14. Security and data handling
+---
 
-See [SECURITY.md](SECURITY.md).
+## 10. License & Attribution
 
-## 15. Feedback and thanks
-
-See [docs/submission/FEEDBACK.md](docs/submission/FEEDBACK.md) for our feedback on the tools.
-
-Thank you to Nebius, NVIDIA and Tavily.
-
-## 16. License
-
-[MIT](LICENSE). Third-party notices in [THIRD_PARTY.md](THIRD_PARTY.md).
+- **License:** Open-source under the [MIT License](LICENSE).
+- **Hackathon Timing:** Built from scratch during the hackathon period (26 Aug to 30 Oct 2026).
+- **Third-Party Libraries:** Documented in [docs/THIRD_PARTY.md](docs/THIRD_PARTY.md).

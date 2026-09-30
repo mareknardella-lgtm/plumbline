@@ -1,0 +1,139 @@
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 150ms ease-out;
+}
+
+.drawer-panel {
+  width: 100%;
+  max-width: 960px;
+  background: var(--bg, #ffffff);
+  height: 100vh;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: slideInRight 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--space-6, 24px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-overlay, .drawer-panel {
+    animation: none;
+  }
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--space-4, 16px);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.drawer-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+}
+
+.drawer-badge {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--plumb, #10b981);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.drawer-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.drawer-body {
+  padding-top: var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5, 20px);
+}
+
+.drawer-lead {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+.architecture-diagram-container {
+  background: var(--bg-subtle, #f8fafc);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+}
+
+.section-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+.arch-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.drawer-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6, 24px);
+  margin-top: var(--space-2, 8px);
+}
+
+.detail-col h4 {
+  margin: 0 0 var(--space-2, 8px) 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+}
+
+.detail-col ul {
+  margin: 0;
+  padding-left: var(--space-4, 16px);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-muted, #64748b);
+}
+
+.detail-col p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-muted, #64748b);
+}

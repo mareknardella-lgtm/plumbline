@@ -1,9 +1,9 @@
 # Plumbline: progress
 
 ## Status
-- **Current phase:** 4 — Hardening
-- **Last gate:** Gate 2 (Dossier generated), Gate 3 (Live UI & Plumb Graph verified end-to-end)
-- **Next step:** H2/H3 checkpoint signoff, 3-specimen sweep, hardening
+- **Current phase:** 5 — Deploy
+- **Last gate:** Gate 4 (Replays recorded, benchmarks measured, failure injection tests passed, freshclone verified)
+- **Next step:** Phase 5 Deploy & Phase 6 Submission kit
 
 ## Requirements R1–R19
 | # | Requirement | Status | Evidence |
@@ -36,6 +36,7 @@
 | 2026-09-30 | Integrated official Contree SDK with graceful fallback | Sandboxes token permission limitations |
 | 2026-09-30 | Standardized SSE events to `event: message` | Browser native `EventSource.onmessage` compatibility |
 | 2026-09-30 | Responsive SVG viewBox & geometry spacing | Prevent viewport clipping and candidate label collision |
+| 2026-09-30 | Specimen-specific probe suites and patches | Accurate behavioral trap testing across all 3 specimens |
 
 ## Measured numbers
 | Date | What | Value | Source |
@@ -45,6 +46,8 @@
 | 2026-09-30 | Differential probes on candidate B | 7/50 divergent | Stage 5 probe run |
 | 2026-09-30 | Live run end-to-end duration | 6.84s | Browser live execution |
 | 2026-09-30 | Frontend build size | 250.7 KB JS / 17.3 KB CSS | `npm run build` |
+| 2026-09-30 | Sandbox Fork vs Cold Rebuild | 1.64ms vs 18.4ms (11.2x) | `scripts/benchmark.py` |
+| 2026-09-30 | Failure injection test pass rate | 7/7 (100%) | `pytest backend/tests/` |
 
 ## Open questions
 - Sandboxes spawn permissions enablement on Token Factory account.
@@ -61,3 +64,4 @@
 | 2026-09-29 | Phases 1-3: Core backend, pipeline, runtime, and frontend components implemented | Wire up UI to backend SSE, test with fake sandbox |
 | 2026-09-30 | Phase 2 complete: Pipeline implemented with 6 real stages, AST mutator, differential probes discovering rounding trap in invoice_totals. Gate 2 passed (`test_pipeline.py`). All 3 specimen traps verified (`verify_specimens.py`). 100% green `check.py`. | H2 checkpoint signoff, multi-specimen sweep |
 | 2026-09-30 | Phase 3 complete & Gate 3 passed: Diagnosed and fixed SSE stream dispatch (`event: message`), resolved geometry clipping, tuned candidate bob separation. Verified live end-to-end in browser with Playwright: Plumb Graph renders guideline, checkpoints, mutant tick strip, swinging cables with divergence badges, settle animation, and verdict banner. Dossier view renders diff viewer and full evidence report. 100% green `check.py`. | Phase 4 Hardening (H3 signoff, sweep all specimens) |
+| 2026-09-30 | Phase 4 complete & Gate 4 passed: Recorded 3 authentic replays (`scripts/record_replay.py`), generated `docs/benchmarks.md` with measured sandbox fork speedup (11.2x), wrote failure injection test suite (`test_failures.py`: 429 retry, prompt injection resistance, cancellation, budget caps), verified clean clone (`scripts/freshclone.py`), verified 0 vulnerabilities (`pip-audit`). `check.py` 100% green. | Phase 5 Deploy & Phase 6 Submission Kit |

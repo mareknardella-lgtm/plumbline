@@ -296,6 +296,60 @@
   text-align: center;
 }
 
+.byok-section {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-control, 6px);
+}
+
+.byok-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--plumb);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font-weight: 600;
+  font-family: var(--font-ui);
+}
+
+.byok-toggle-btn:hover {
+  text-decoration: underline;
+}
+
+.byok-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.byok-input {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-control, 6px);
+  background: var(--panel);
+  color: var(--ink);
+  font-family: var(--font-code, monospace);
+  font-size: 12px;
+}
+
+.byok-input:focus {
+  outline: 2px solid var(--plumb);
+  border-color: transparent;
+}
+
+.byok-hint {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
 @media (max-width: 900px) {
   .home-main {
     grid-template-columns: 1fr;

@@ -47,4 +47,5 @@ export interface RunState {
   logs: string[];
   ledger: any[];
   dossier: any | null;
+  pins?: any[];
 }

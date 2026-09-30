@@ -18,6 +18,8 @@ export default function HomeScreen() {
   const [isBenchOpen, setIsBenchOpen] = useState(false);
   const [githubUrl, setGithubUrl] = useState('');
   const [fetchingUrl, setFetchingUrl] = useState(false);
+  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('nebius_byok_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
 
   const handleFetchGithub = async () => {
     if (!githubUrl.trim()) return;
@@ -50,6 +52,7 @@ export default function HomeScreen() {
         mode: depth,
         goal,
         code: tab === 'paste' ? pasteCode : '',
+        api_key: apiKey.trim() || undefined,
       });
       if (res && res.id) {
         window.location.hash = `#/run/${res.id}`;
@@ -255,6 +258,33 @@ export default function HomeScreen() {
                 value={depth}
                 onChange={setDepth}
               />
+            </div>
+
+            <div className="byok-section">
+              <button
+                type="button"
+                className="byok-toggle-btn"
+                onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+              >
+                🔑 {showApiKeyInput ? 'Hide Custom API Key' : 'Bring Your Own Key (Optional BYOK)'}
+              </button>
+              {showApiKeyInput && (
+                <div className="byok-input-container">
+                  <input
+                    type="password"
+                    placeholder="Enter Nebius Token Factory Key (sk-...)"
+                    value={apiKey}
+                    onChange={(e) => {
+                      setApiKey(e.target.value);
+                      sessionStorage.setItem('nebius_byok_key', e.target.value);
+                    }}
+                    className="byok-input"
+                  />
+                  <span className="byok-hint">
+                    Bypasses demo rate limits. Kept only in this browser session.
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="action-row">

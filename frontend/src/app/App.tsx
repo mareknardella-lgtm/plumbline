@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import NotFound from './NotFound';
 import HomeScreen from '../screens/HomeScreen';
@@ -21,9 +21,12 @@ export default function App() {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark' || savedTheme === 'light') {
         setTheme(savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
       }
-    } catch (e) {
-      // Ignore
+    } catch {
+      document.documentElement.setAttribute('data-theme', 'light');
     }
   }, []);
 
@@ -33,7 +36,7 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
     try {
       localStorage.setItem('theme', newTheme);
-    } catch (e) {
+    } catch {
       // Ignore
     }
   };
@@ -54,13 +57,18 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div className={`app-container theme-${theme}`}>
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-        <button onClick={toggleTheme} className="theme-toggle">
-          Toggle Theme
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        <button
+          onClick={toggleTheme}
+          className="theme-toggle"
+          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+        >
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
-        <main id="main-content">
-          {content}
-        </main>
+        <main id="main-content">{content}</main>
       </div>
     </ErrorBoundary>
   );

@@ -18,6 +18,7 @@ export const initialState: RunState = {
   logs: [],
   ledger: [],
   dossier: null,
+  pins: [],
 };
 
 export function reduceEvent(state: RunState, event: EventEnvelope): RunState {
@@ -62,9 +63,22 @@ export function reduceEvent(state: RunState, event: EventEnvelope): RunState {
       };
 
     case 'pins.written':
+    case 'pinswritten':
       return {
         ...state,
+        pins: d.tests || state.pins || [],
         logs: [...state.logs, `Wrote ${d.count || 0} behavior tests (${d.coverage_percent || 0}% coverage)`],
+      };
+
+    case 'llm.call':
+    case 'llmcall':
+      return {
+        ...state,
+        ledger: [...state.ledger, d],
+        logs: [
+          ...state.logs,
+          `LLM [${d.tier || 'model'}]: ${d.model || ''} (${(d.tokens_in || 0) + (d.tokens_out || 0)} tokens, ${d.latency_ms || 0}ms)`,
+        ],
       };
 
     case 'mutants.planned':

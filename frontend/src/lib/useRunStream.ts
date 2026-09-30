@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { RunState, EventEnvelope } from './types';
 import { reduceEvent, initialState } from './reducer';
 import { subscribeToEvents, subscribeToReplay } from './api';
 
 export function useRunStream(runId: string | null, isReplay = false, speed = 1) {
-  const [state, setState] = useState<RunState>(initialState);
+  const [events, setEvents] = useState<EventEnvelope[]>([]);
+  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const lastSeq = useRef<number>(-1);
@@ -14,13 +15,15 @@ export function useRunStream(runId: string | null, isReplay = false, speed = 1) 
 
     setIsConnected(false);
     setError(null);
-    setState(initialState);
+    setEvents([]);
+    setScrubIndex(null);
+    lastSeq.current = -1;
 
     let es: EventSource;
 
     const handleEvent = (event: EventEnvelope) => {
       lastSeq.current = event.seq;
-      setState(prev => reduceEvent(prev, event));
+      setEvents(prev => [...prev, event]);
     };
 
     try {
@@ -31,7 +34,7 @@ export function useRunStream(runId: string | null, isReplay = false, speed = 1) 
       }
 
       es.onopen = () => setIsConnected(true);
-      es.onerror = (err) => {
+      es.onerror = () => {
         setIsConnected(false);
         setError(new Error('Event source connection error'));
       };
@@ -46,5 +49,17 @@ export function useRunStream(runId: string | null, isReplay = false, speed = 1) 
     };
   }, [runId, isReplay, speed]);
 
-  return { state, error, isConnected };
+  const state: RunState = useMemo(() => {
+    const stream = scrubIndex !== null ? events.slice(0, scrubIndex) : events;
+    return stream.reduce(reduceEvent, initialState);
+  }, [events, scrubIndex]);
+
+  return {
+    state,
+    error,
+    isConnected,
+    totalEvents: events.length,
+    scrubIndex,
+    setScrubIndex,
+  };
 }

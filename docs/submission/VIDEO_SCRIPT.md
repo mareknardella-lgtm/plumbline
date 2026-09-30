@@ -54,7 +54,7 @@
 ### Scene 7: Conclusion & Links (2:45 – 2:55)
 - **On Screen:** Title card showing:
   - **Plumbline**
-  - GitHub: `github.com/YOUR_USERNAME/plumbline`
+  - GitHub: `https://github.com/mareknardella-lgtm/plumbline`
   - Built for Nebius × NVIDIA Global AI Hackathon
   - Open Source (MIT License)
 - **Voiceover:**

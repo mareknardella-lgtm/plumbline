@@ -25,7 +25,7 @@ Plumbline includes recorded high-fidelity replays of real runs across three comp
 
 ```powershell
 # 1. Clone repository
-git clone https://github.com/YOUR_USERNAME/plumbline.git
+git clone https://github.com/mareknardella-lgtm/plumbline.git
 cd plumbline
 
 # 2. Sync Python dependencies
